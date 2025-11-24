@@ -1013,13 +1013,13 @@ learnaws-miniapp/
 - [x] Store questions in JSON format (1,119 questions in data/questions.json)
 - [x] Create question service API (ready for Phase 3)
 
-### Phase 2: Smart Contracts (Week 1-2)
+### Phase 2: Smart Contracts (Week 1-2) ✅
 
-- [ ] Create AWSRewardToken contract
-- [ ] Create AssessmentRewards contract
-- [ ] Write comprehensive tests
-- [ ] Deploy to Sepolia testnet
-- [ ] Verify contracts on explorer
+- [x] Create AWSRewardToken contract
+- [x] Create AssessmentRewards contract
+- [x] Write comprehensive tests (39 tests passing)
+- [x] Deploy to Sepolia testnet
+- [x] Verify contracts on explorer (Celoscan)
 
 ### Phase 3: Frontend - Assessment UI (Week 2)
 
@@ -1135,6 +1135,6 @@ learnaws-miniapp/
 
 ---
 
-**Document Version**: 1.2\
-**Last Updated**: 2025-11-23\
-**Status**: Phase 1 Complete ✅ | Phase 2 In Progress
+**Document Version**: 1.3\
+**Last Updated**: 2025-11-24\
+**Status**: Phase 1 Complete ✅ | Phase 2 Complete ✅ | Phase 3 In Progress
