@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeProvider } from "@/components/theme-provider";
 import { MiniAppProvider } from "@/contexts/miniapp-context";
 import FrameWalletProvider from "@/contexts/frame-wallet-context";
 import dynamic from "next/dynamic";
@@ -11,10 +12,12 @@ const ErudaProvider = dynamic(
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ErudaProvider>
-      <FrameWalletProvider>
-        <MiniAppProvider addMiniAppOnLoad={true}>{children}</MiniAppProvider>
-      </FrameWalletProvider>
-    </ErudaProvider>
+    <ThemeProvider defaultTheme="light" storageKey="celo-theme">
+      <ErudaProvider>
+        <FrameWalletProvider>
+          <MiniAppProvider addMiniAppOnLoad={true}>{children}</MiniAppProvider>
+        </FrameWalletProvider>
+      </ErudaProvider>
+    </ThemeProvider>
   );
 }

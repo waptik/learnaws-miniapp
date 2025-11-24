@@ -1,0 +1,360 @@
+/**
+ * Celo Brand Design System
+ * Based on official Celo branding guidelines
+ * https://github.com/orgs/celo-org/discussions/18
+ * 
+ * Note: Inter font is loaded via Next.js font optimization in layout.tsx
+ */
+
+/* GT Alpina fallback - using system serif with similar characteristics */
+/* For production, use actual GT Alpina font files */
+@font-face {
+  font-family: 'GT Alpina';
+  src: local('Georgia'), local('Times New Roman'), serif;
+  font-weight: 250;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GT Alpina';
+  src: local('Georgia'), local('Times New Roman'), serif;
+  font-weight: 250;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* Primary Colors - Bold Celo Brand */
+  --celo-yellow: #FCFF52;
+  --celo-forest-green: #4E632A;
+  --celo-purple: #1A0329;
+
+  /* Base Colors */
+  --celo-light-tan: #FBF6F1;
+  --celo-dark-tan: #E6E3D5;
+  --celo-brown: #635949;
+  --celo-black: #000000;
+  --celo-white: #FFFFFF;
+
+  /* Functional Colors */
+  --celo-inactive: #9B9B9B;
+  --celo-body-copy: #666666;
+
+  /* Feedback Colors */
+  --celo-success: #329F3B;
+  --celo-error: #E70532;
+
+  /* Accent Pops - Use sparingly */
+  --celo-pink: #F2A9E7;
+  --celo-orange: #F29E5F;
+  --celo-lime: #B2EBA1;
+  --celo-light-blue: #8AC0F9;
+
+  /* Light Mode (Default) */
+  --bg-primary: var(--celo-light-tan);
+  --bg-secondary: var(--celo-dark-tan);
+  --bg-accent: var(--celo-yellow);
+  --bg-dark: var(--celo-purple);
+  --bg-success: var(--celo-success);
+  --bg-error: var(--celo-error);
+
+  --text-primary: var(--celo-black);
+  --text-secondary: var(--celo-body-copy);
+  --text-inverse: var(--celo-white);
+  --text-inactive: var(--celo-inactive);
+
+  --border-color: #CCCCCC;
+  --border-dark: #483554;
+
+  /* Typography */
+  --font-headline: 'GT Alpina', Georgia, 'Times New Roman', serif;
+  --font-body: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.dark {
+  /* Dark Mode Colors */
+  --bg-primary: var(--celo-purple);
+  --bg-secondary: var(--celo-forest-green);
+  --bg-accent: var(--celo-yellow);
+  --bg-dark: var(--celo-black);
+  --bg-success: var(--celo-success);
+  --bg-error: var(--celo-error);
+
+  --text-primary: var(--celo-white);
+  --text-secondary: var(--celo-dark-tan);
+  --text-inverse: var(--celo-black);
+  --text-inactive: var(--celo-inactive);
+
+  --border-color: #483554;
+  --border-dark: #666666;
+}
+
+/* Typography Scale */
+.celo-h1 {
+  font-family: var(--font-headline);
+  font-size: clamp(48px, 8vw, 72px);
+  font-weight: 250;
+  line-height: 1.17;
+  letter-spacing: -0.01em;
+  font-style: normal;
+}
+
+.celo-h1-italic {
+  font-family: var(--font-headline);
+  font-size: clamp(48px, 8vw, 72px);
+  font-weight: 250;
+  line-height: 1.17;
+  letter-spacing: -0.01em;
+  font-style: italic;
+}
+
+.celo-h2 {
+  font-family: var(--font-headline);
+  font-size: clamp(40px, 6vw, 54px);
+  font-weight: 250;
+  line-height: 1.33;
+  letter-spacing: -0.01em;
+}
+
+.celo-h3 {
+  font-family: var(--font-headline);
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 250;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.celo-h4 {
+  font-family: var(--font-headline);
+  font-size: clamp(32px, 4vw, 40px);
+  font-weight: 250;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.celo-body-large {
+  font-family: var(--font-body);
+  font-size: clamp(18px, 2.5vw, 20px);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.celo-body {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 2vw, 16px);
+  font-weight: 400;
+  line-height: 1.625;
+  letter-spacing: -0.01em;
+}
+
+.celo-body-small {
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.75vw, 14px);
+  font-weight: 400;
+  line-height: 1.29;
+  letter-spacing: -0.01em;
+}
+
+.celo-link,
+.celo-tag,
+.celo-eyebrow {
+  font-family: var(--font-body);
+  font-size: clamp(11px, 1.5vw, 12px);
+  font-weight: 750;
+  line-height: 1.33;
+  letter-spacing: 0em;
+  text-transform: uppercase;
+}
+
+/* Layout Utilities */
+.celo-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: clamp(16px, 4vw, 32px);
+}
+
+.celo-section {
+  padding: clamp(32px, 8vw, 64px) clamp(16px, 4vw, 32px);
+}
+
+/* Color Blocks */
+.celo-block-yellow {
+  background-color: var(--celo-yellow);
+  color: var(--celo-black);
+}
+
+.celo-block-purple {
+  background-color: var(--celo-purple);
+  color: var(--celo-white);
+}
+
+.celo-block-green {
+  background-color: var(--celo-forest-green);
+  color: var(--celo-white);
+}
+
+.celo-block-tan {
+  background-color: var(--celo-light-tan);
+  color: var(--celo-black);
+}
+
+.dark .celo-block-tan {
+  background-color: var(--celo-dark-tan);
+  color: var(--celo-white);
+}
+
+/* Buttons - Rectangular, Sharp Edges */
+.celo-button {
+  display: inline-block;
+  padding: clamp(12px, 2vw, 16px) clamp(24px, 4vw, 32px);
+  border: 2px solid var(--celo-black);
+  background-color: var(--celo-yellow);
+  color: var(--celo-black);
+  font-family: var(--font-body);
+  font-size: clamp(14px, 2vw, 16px);
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border-radius: 0;
+}
+
+.celo-button:hover {
+  background-color: var(--celo-black);
+  color: var(--celo-yellow);
+  border-color: var(--celo-yellow);
+}
+
+.celo-button-secondary {
+  background-color: var(--celo-purple);
+  color: var(--celo-white);
+  border-color: var(--celo-purple);
+}
+
+.celo-button-secondary:hover {
+  background-color: var(--celo-white);
+  color: var(--celo-purple);
+  border-color: var(--celo-purple);
+}
+
+.dark .celo-button-secondary {
+  background-color: var(--celo-forest-green);
+  color: var(--celo-white);
+  border-color: var(--celo-forest-green);
+}
+
+.dark .celo-button-secondary:hover {
+  background-color: var(--celo-yellow);
+  color: var(--celo-black);
+  border-color: var(--celo-yellow);
+}
+
+/* Cards - Rectangular, Visible Outlines */
+.celo-card {
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  padding: clamp(24px, 4vw, 32px);
+  border-radius: 0;
+}
+
+/* Inputs - Stark Outlined Boxes */
+.celo-input {
+  width: 100%;
+  padding: clamp(12px, 2vw, 16px);
+  border: 2px solid var(--celo-black);
+  background-color: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: clamp(14px, 2vw, 16px);
+  border-radius: 0;
+}
+
+.celo-input:focus {
+  outline: none;
+  border-color: var(--celo-yellow);
+  background-color: var(--celo-yellow);
+  color: var(--celo-black);
+}
+
+/* Mobile-First Responsive */
+@media (min-width: 640px) {
+  .celo-container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .celo-container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .celo-container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .celo-container {
+    max-width: 1280px;
+  }
+}
+
+/* Utility Classes */
+.celo-text-yellow {
+  color: var(--celo-yellow);
+}
+
+.celo-text-purple {
+  color: var(--celo-purple);
+}
+
+.celo-text-green {
+  color: var(--celo-forest-green);
+}
+
+.celo-bg-yellow {
+  background-color: var(--celo-yellow);
+}
+
+.celo-bg-purple {
+  background-color: var(--celo-purple);
+}
+
+.celo-bg-green {
+  background-color: var(--celo-forest-green);
+}
+
+/* Sharp edges - no rounded corners */
+.celo-sharp {
+  border-radius: 0 !important;
+}
+
+/* High contrast borders */
+.celo-border {
+  border: 2px solid var(--border-color);
+}
+
+.celo-border-dark {
+  border: 2px solid var(--border-dark);
+}
+
+/* Negative space */
+.celo-spacing-large {
+  margin: clamp(48px, 10vw, 96px) 0;
+}
+
+.celo-spacing-medium {
+  margin: clamp(32px, 6vw, 64px) 0;
+}
+
+.celo-spacing-small {
+  margin: clamp(16px, 3vw, 32px) 0;
+}
+

@@ -1,5 +1,26 @@
 import type { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox-viem";
+import { config as dotenvConfig } from "dotenv";
+
+dotenvConfig();
+
+const accounts = process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [];
+
+// Support custom RPC URLs via environment variables for better reliability
+// Example: Use Infura, Alchemy, or QuickNode endpoints
+// SEPOLIA_RPC_URL=https://forno.celo-sepolia.celo-testnet.org
+const networkConfig = {
+  celo: {
+    url: process.env.CELO_RPC_URL || "https://forno.celo.org",
+    chainId: 42220,
+  },
+  sepolia: {
+    url:
+      process.env.SEPOLIA_RPC_URL ||
+      "https://forno.celo-sepolia.celo-testnet.org",
+    chainId: 11142220,
+  },
+};
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -12,34 +33,24 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
-    // Celo Mainnet
+    // Celo Mainnet (Live)
     celo: {
-      url: "https://forno.celo.org",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 42220,
+      url: networkConfig.celo.url,
+      accounts,
+      chainId: networkConfig.celo.chainId,
+      timeout: 120000, // 120 seconds
     },
-    // Celo Alfajores Testnet
-    alfajores: {
-      url: "https://alfajores-forno.celo-testnet.org",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 44787,
-    },
-    // Celo Sepolia Testnet
+    // Celo Sepolia Testnet (Test)
     sepolia: {
-      url: "https://forno.celo-sepolia.celo-testnet.org",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 11142220,
-    },
-    // Local development
-    localhost: {
-      url: "http://127.0.0.1:8545",
-      chainId: 31337,
+      url: networkConfig.sepolia.url,
+      accounts,
+      chainId: networkConfig.sepolia.chainId,
+      timeout: 120000, // 120 seconds
     },
   },
   etherscan: {
     apiKey: {
       celo: process.env.CELOSCAN_API_KEY || "",
-      alfajores: process.env.CELOSCAN_API_KEY || "",
       sepolia: process.env.CELOSCAN_API_KEY || "",
     },
     customChains: [
@@ -52,18 +63,10 @@ const config: HardhatUserConfig = {
         },
       },
       {
-        network: "alfajores",
-        chainId: 44787,
-        urls: {
-          apiURL: "https://api-alfajores.celoscan.io/api",
-          browserURL: "https://alfajores.celoscan.io",
-        },
-      },
-      {
         network: "sepolia",
         chainId: 11142220,
         urls: {
-          apiURL: "https://api-celo-sepolia.blockscout.com/api",
+          apiURL: "https://celo-sepolia.blockscout.com/api",
           browserURL: "https://celo-sepolia.blockscout.com",
         },
       },

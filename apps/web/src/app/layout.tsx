@@ -1,13 +1,18 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
-import { Navbar } from '@/components/navbar';
-import Providers from "@/components/providers"
+import { Navbar } from "@/components/navbar";
+import Providers from "@/components/providers";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["200", "400", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
-const appUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
+const appUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 // Embed metadata for Farcaster sharing
 const frame = {
@@ -26,11 +31,11 @@ const frame = {
 };
 
 export const metadata: Metadata = {
-  title: 'learnaws-miniapp',
-  description: 'A miniapp to prepare yourself for aws certifications',
+  title: "learnaws-miniapp",
+  description: "A miniapp to prepare yourself for aws certifications",
   openGraph: {
-    title: 'learnaws-miniapp',
-    description: 'A miniapp to prepare yourself for aws certifications',
+    title: "learnaws-miniapp",
+    description: "A miniapp to prepare yourself for aws certifications",
     images: [`${appUrl}/opengraph-image.png`],
   },
   other: {
@@ -44,15 +49,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} font-body`}>
         {/* Navbar is included on all pages */}
         <div className="relative flex min-h-screen flex-col">
           <Providers>
             <Navbar />
-            <main className="flex-1">
-              {children}
-            </main>
+            <main className="flex-1">{children}</main>
           </Providers>
         </div>
       </body>

@@ -27,13 +27,13 @@
     "deploy": {
       "dependsOn": ["compile"]
     },
-    "deploy:alfajores": {
-      "dependsOn": ["compile"]
-    },
     "deploy:sepolia": {
       "dependsOn": ["compile"]
     },
     "deploy:celo": {
+      "dependsOn": ["compile"]
+    },
+    "verify": {
       "dependsOn": ["compile"]
     }
   }

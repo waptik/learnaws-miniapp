@@ -1,8 +1,17 @@
 # learnaws-miniapp
 
-A miniapp to prepare yourself for aws certifications
+A CodeSignal-style assessment MiniApp for AWS certification practice (CLF-C02) built on Celo blockchain with token rewards.
+
+**Features**:
+- 🎯 Practice assessments with 50 random questions
+- 🏆 Token rewards for passing (1 token per pass, max 3/day)
+- 📚 Questions sourced from [AWS-Certified-Cloud-Practitioner-Notes](https://github.com/kananinirav/AWS-Certified-Cloud-Practitioner-Notes)
+- 💰 Celo blockchain integration for token rewards
+- 🎨 Bold, high-contrast CodeSignal-inspired UI
 
 A modern Celo blockchain application built with Next.js, TypeScript, and Turborepo.
+
+> 📋 **Current Phase**: PRD/Planning - See [PRD.md](./docs/PRD.md) for product requirements and [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) for detailed architecture.
 
 ## Getting Started
 
@@ -32,14 +41,18 @@ This is a monorepo managed by Turborepo with the following structure:
 - `pnpm lint` - Lint all packages and apps
 - `pnpm type-check` - Run TypeScript type checking
 
+### Phase 1 Scripts
+
+- `pnpm phase1:fetch` - Fetch, parse, deduplicate, and save questions from GitHub (uses Bun)
+
 ### Smart Contract Scripts
 
 - `pnpm contracts:compile` - Compile smart contracts
 - `pnpm contracts:test` - Run smart contract tests
 - `pnpm contracts:deploy` - Deploy contracts to local network
-- `pnpm contracts:deploy:alfajores` - Deploy to Celo Alfajores testnet
-- `pnpm contracts:deploy:sepolia` - Deploy to Celo Sepolia testnet
-- `pnpm contracts:deploy:celo` - Deploy to Celo mainnet
+- `pnpm contracts:deploy:sepolia` - Deploy to Celo Sepolia testnet (test)
+- `pnpm contracts:deploy:celo` - Deploy to Celo mainnet (live)
+- `pnpm contracts:verify` - Verify contracts on Celoscan
 
 ## Tech Stack
 
@@ -51,9 +64,22 @@ This is a monorepo managed by Turborepo with the following structure:
 - **Monorepo**: Turborepo
 - **Package Manager**: PNPM
 
+## 📚 Documentation
+
+- [PRD](./docs/PRD.md) - Product Requirements Document (current phase)
+- [Implementation Plan](./docs/IMPLEMENTATION_PLAN.md) - Detailed architecture and implementation guide
+- [Implementation Summary](./docs/IMPLEMENTATION_SUMMARY.md) - High-level overview
+- [Design System](./docs/DESIGN_SYSTEM.md) - Celo brand design system reference
+- [Design System Implementation](./docs/DESIGN_SYSTEM_IMPLEMENTATION.md) - Implementation status
+- [Results Display Specification](./docs/RESULTS_DISPLAY_SPEC.md) - Assessment results format
+- [Question Types](./docs/QUESTION_TYPES.md) - Multiple choice and multiple response question formats
+- [Farcaster Setup](./docs/FARCASTER_SETUP.md) - Farcaster MiniApp setup guide
+
 ## Learn More
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Celo Documentation](https://docs.celo.org/)
+- [Celo Composer Kit](https://docs.celo.org/composer)
 - [Turborepo Documentation](https://turbo.build/repo/docs)
 - [shadcn/ui Documentation](https://ui.shadcn.com/)
+- [AWS Practice Exams Source](https://github.com/kananinirav/AWS-Certified-Cloud-Practitioner-Notes)

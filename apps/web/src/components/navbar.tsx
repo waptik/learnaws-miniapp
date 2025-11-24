@@ -11,6 +11,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -54,7 +55,8 @@ export function Navbar() {
                     {link.external && <ExternalLink className="h-4 w-4" />}
                   </Link>
                 ))}
-                <div className="mt-6 pt-6 border-t">
+                <div className="mt-6 pt-6 border-t space-y-3">
+                  <ThemeToggle />
                   <Button className="w-full">Connect Wallet</Button>
                 </div>
               </nav>
@@ -90,6 +92,7 @@ export function Navbar() {
           ))}
           
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <Button variant="outline" size="sm">Connect Wallet</Button>
           </div>
         </nav>

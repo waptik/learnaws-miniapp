@@ -6,7 +6,7 @@ import {
 } from "@farcaster/frame-sdk";
 import { env } from "./env";
 
-const appUrl = env.NEXT_PUBLIC_URL || "";
+const appUrl = env.NEXT_PUBLIC_BASE_URL || "";
 
 type SendFrameNotificationResult =
   | {

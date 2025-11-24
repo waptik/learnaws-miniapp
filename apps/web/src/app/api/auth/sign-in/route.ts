@@ -15,11 +15,11 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   let isValidSignature;
   let walletAddress: Address = zeroAddress;
   let expirationTime = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-  
+
   // Verify signature matches custody address and auth address
   try {
     const payload = await quickAuthClient.verifyJwt({
-      domain: new URL(env.NEXT_PUBLIC_URL).hostname,
+      domain: new URL(env.NEXT_PUBLIC_BASE_URL).hostname,
       token: farcasterToken,
     });
     isValidSignature = !!payload;

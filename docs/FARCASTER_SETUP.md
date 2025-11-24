@@ -1,15 +1,41 @@
 # Farcaster Miniapp Setup Guide
 
-This guide will help you set up your Farcaster Miniapp for proper integration with Farcaster clients.
+## 📚 Navigation
+
+**Project Documentation**:
+
+- [PRD](./PRD.md) - Product Requirements Document
+- [Implementation Plan](./IMPLEMENTATION_PLAN.md) - Detailed architecture and
+  implementation guide
+- [Implementation Summary](./IMPLEMENTATION_SUMMARY.md) - High-level overview
+- [Phase 1 Implementation](./PHASE_1_IMPLEMENTATION.md) - Data collection &
+  processing
+
+**Technical Specifications**:
+
+- [Question Types](./QUESTION_TYPES.md) - Multiple choice and multiple response
+  formats
+- [Results Display Specification](./RESULTS_DISPLAY_SPEC.md) - Assessment
+  results format
+- [Design System](./DESIGN_SYSTEM.md) - Celo brand design system reference
+- [Design System Implementation](./DESIGN_SYSTEM_IMPLEMENTATION.md) -
+  Implementation status
+
+---
+
+This guide will help you set up your Farcaster Miniapp for proper integration
+with Farcaster clients.
 
 ## Prerequisites
 
 - A Farcaster account
-- Your app deployed to a public domain (for production) or ngrok (for development)
+- Your app deployed to a public domain (for production) or ngrok (for
+  development)
 
 ## Setting Up Account Association
 
-The Farcaster manifest requires a signed account association to verify domain ownership. Here's how to set it up:
+The Farcaster manifest requires a signed account association to verify domain
+ownership. Here's how to set it up:
 
 ### For Development (using ngrok)
 
@@ -22,21 +48,22 @@ The Farcaster manifest requires a signed account association to verify domain ow
    ```bash
    ngrok http 3000
    ```
-   
+
    Copy the ngrok URL (e.g., `https://abc123.ngrok-free.app`)
 
 3. **Update your environment variables:**
    ```bash
    cp .env.example .env.local
    ```
-   
+
    Edit `.env.local` and update:
    ```
-   NEXT_PUBLIC_URL=https://abc123.ngrok-free.app
+   NEXT_PUBLIC_BASE_URL=https://abc123.ngrok-free.app
    ```
 
 4. **Generate account association:**
-   - Go to: https://farcaster.xyz/~/developers/mini-apps/manifest?domain=abc123.ngrok-free.app
+   - Go to:
+     https://farcaster.xyz/~/developers/mini-apps/manifest?domain=abc123.ngrok-free.app
    - Sign in with your Farcaster account
    - Sign the manifest
    - Copy the generated `header`, `payload`, and `signature` values
@@ -58,13 +85,14 @@ The Farcaster manifest requires a signed account association to verify domain ow
 1. **Deploy your app to your production domain**
 
 2. **Generate account association for your production domain:**
-   - Go to: https://farcaster.xyz/~/developers/mini-apps/manifest?domain=yourdomain.com
+   - Go to:
+     https://farcaster.xyz/~/developers/mini-apps/manifest?domain=yourdomain.com
    - Sign the manifest with your Farcaster account
    - Copy the generated values
 
 3. **Set environment variables in your deployment platform:**
    ```
-   NEXT_PUBLIC_URL=https://yourdomain.com
+   NEXT_PUBLIC_BASE_URL=https://yourdomain.com
    NEXT_PUBLIC_FARCASTER_HEADER=your-header-here
    NEXT_PUBLIC_FARCASTER_PAYLOAD=your-payload-here
    NEXT_PUBLIC_FARCASTER_SIGNATURE=your-signature-here
@@ -87,16 +115,22 @@ The Farcaster manifest requires a signed account association to verify domain ow
 ## Troubleshooting
 
 ### "Account association not configured" error
-- Make sure you've set all three environment variables: `NEXT_PUBLIC_FARCASTER_HEADER`, `NEXT_PUBLIC_FARCASTER_PAYLOAD`, and `NEXT_PUBLIC_FARCASTER_SIGNATURE`
+
+- Make sure you've set all three environment variables:
+  `NEXT_PUBLIC_FARCASTER_HEADER`, `NEXT_PUBLIC_FARCASTER_PAYLOAD`, and
+  `NEXT_PUBLIC_FARCASTER_SIGNATURE`
 - Verify the values are not placeholder text
 
 ### "No valid account association" in Warpcast
+
 - Ensure the domain in your signed payload exactly matches your deployed domain
 - Check that your manifest endpoint returns a 200 status code
 - Verify the JSON structure matches the Farcaster specification
 
 ### Domain mismatch errors
-- The signed domain must exactly match where your app is hosted, including subdomains
+
+- The signed domain must exactly match where your app is hosted, including
+  subdomains
 - If using ngrok, make sure the ngrok URL matches the signed domain
 
 ## Additional Resources

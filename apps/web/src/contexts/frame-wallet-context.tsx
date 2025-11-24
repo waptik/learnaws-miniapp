@@ -2,16 +2,17 @@
 
 import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactNode } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { celo, celoAlfajores } from "wagmi/chains";
+import { celo, celoSepolia } from "wagmi/chains";
 
 const config = createConfig({
-  chains: [celo, celoAlfajores],
+  chains: [celo, celoSepolia],
   connectors: [farcasterMiniApp()],
   transports: {
     [celo.id]: http(),
-    [celoAlfajores.id]: http(),
+    [celoSepolia.id]: http(),
   },
 });
 
@@ -24,7 +25,12 @@ export default function FrameWalletProvider({
 }) {
   return (
     <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        {children}
+        {process.env.NODE_ENV === "development" && (
+          <ReactQueryDevtools initialIsOpen={false} />
+        )}
+      </QueryClientProvider>
     </WagmiProvider>
   );
 }
