@@ -30,25 +30,52 @@ export default function ResultsPage() {
       return;
     }
 
-    try {
-      const questions: Question[] = JSON.parse(questionsJson);
-      const answers: Answer[] = JSON.parse(answersJson);
+    async function submitAssessment() {
+      try {
+        const questions: Question[] = JSON.parse(questionsJson);
+        const answers: Answer[] = JSON.parse(answersJson);
 
-      // Calculate results
-      const assessmentResult = calculateAssessmentResult(
-        questions,
-        answers,
-        candidateAddress,
-        assessmentId
-      );
+        // Submit to API for scoring
+        const response = await fetch("/api/assessment/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            assessmentId,
+            candidateAddress,
+            questions,
+            answers,
+          }),
+        });
 
-      setResult(assessmentResult);
-    } catch (error) {
-      console.error("Failed to calculate results:", error);
-      router.push("/");
-    } finally {
-      setIsLoading(false);
+        if (!response.ok) {
+          throw new Error("Failed to submit assessment");
+        }
+
+        const data = await response.json();
+        setResult(data.result);
+      } catch (error) {
+        console.error("Failed to submit assessment:", error);
+        // Fallback to client-side calculation if API fails
+        try {
+          const questions: Question[] = JSON.parse(questionsJson);
+          const answers: Answer[] = JSON.parse(answersJson);
+          const assessmentResult = calculateAssessmentResult(
+            questions,
+            answers,
+            candidateAddress,
+            assessmentId
+          );
+          setResult(assessmentResult);
+        } catch (fallbackError) {
+          console.error("Fallback calculation also failed:", fallbackError);
+          router.push("/");
+        }
+      } finally {
+        setIsLoading(false);
+      }
     }
+
+    submitAssessment();
   }, [router, address]);
 
   const handleTakeAnother = () => {
