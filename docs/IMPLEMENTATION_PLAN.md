@@ -1046,11 +1046,13 @@ learnaws-miniapp/
 
 ### Phase 5: Wallet Integration (Week 3)
 
-- [ ] Integrate Celo Composer Kit
-- [ ] Add wallet connect functionality
-- [ ] Implement token claim flow
-- [ ] Add transaction status tracking
-- [ ] Display token balance
+- [x] Wallet connect functionality (implemented in earlier phases with Wagmi +
+      Farcaster)
+- [x] Note: Using Wagmi directly instead of Celo Composer Kit (same
+      functionality)
+- [x] Implement token claim flow
+- [x] Add transaction status tracking
+- [x] Display token balance
 
 ### Phase 6: Testing & Polish (Week 3-4)
 
@@ -1144,4 +1146,4 @@ learnaws-miniapp/
 **Document Version**: 1.4\
 **Last Updated**: 2025-01-24\
 **Status**: Phase 1 Complete ✅ | Phase 2 Complete ✅ | Phase 3 Complete ✅ |
-Phase 4 Complete ✅ | Phase 5 In Progress
+Phase 4 Complete ✅ | Phase 5 Complete ✅ | Phase 6 In Progress

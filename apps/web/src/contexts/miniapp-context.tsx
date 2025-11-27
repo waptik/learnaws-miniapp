@@ -1,23 +1,21 @@
 "use client";
-import { sdk } from "@farcaster/frame-sdk";
+import { sdk, type Context } from "@farcaster/miniapp-sdk";
 // Use any types for Farcaster SDK compatibility
-type FrameContext = any;
-type AddFrameResult = any;
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
-import FrameWalletProvider from "./frame-wallet-context";
+import { useAccount, useConnect } from "wagmi";
 
+type FrameContext = Context.MiniAppContext;
 interface MiniAppContextType {
-  isMiniAppReady: boolean;
   context: FrameContext | null;
-  setMiniAppReady: () => void;
-  addMiniApp: () => Promise<AddFrameResult | null>;
+  isInMiniApp: boolean;
 }
 
 const MiniAppContext = createContext<MiniAppContextType | undefined>(undefined);
@@ -27,67 +25,135 @@ interface MiniAppProviderProps {
   children: ReactNode;
 }
 
-export function MiniAppProvider({ children, addMiniAppOnLoad }: MiniAppProviderProps): JSX.Element {
+export function MiniAppProvider({
+  children,
+  addMiniAppOnLoad,
+}: MiniAppProviderProps): JSX.Element {
   const [context, setContext] = useState<FrameContext | null>(null);
-  const [isMiniAppReady, setIsMiniAppReady] = useState(false);
+  const [isInMiniApp, setIsInMiniApp] = useState(false);
+  const hasAttemptedAutoConnect = useRef(false);
 
-  const setMiniAppReady = useCallback(async () => {
-    try {
-      const context = await sdk.context;
-      if (context) {
-        setContext(context);
-      }
-      await sdk.actions.ready();
-    } catch (err) {
-      console.error("SDK initialization error:", err);
-    } finally {
-      setIsMiniAppReady(true);
-    }
-  }, []);
+  // Account and connect hooks
+  const { isConnected } = useAccount();
+  const { connect, connectors } = useConnect();
 
+  // Initial setup: check if in miniapp and auto-connect only once on mount
   useEffect(() => {
-    if (!isMiniAppReady) {
-      setMiniAppReady().then(() => {
-        console.log("MiniApp loaded");
-      });
-    }
-  }, [isMiniAppReady, setMiniAppReady]);
+    const autoConnect = async () => {
+      // Only attempt auto-connect once on initial mount
+      if (hasAttemptedAutoConnect.current) {
+        return;
+      }
+
+      try {
+        // Check if we're in a miniapp - wrap in try/catch with timeout to prevent hanging
+        let isInMiniApp = false;
+        try {
+          // Add timeout to prevent hanging
+          const timeoutPromise = new Promise<boolean>((_, reject) =>
+            setTimeout(() => reject(new Error("Timeout")), 2000)
+          );
+
+          isInMiniApp = await Promise.race([sdk.isInMiniApp(), timeoutPromise]);
+        } catch (err) {
+          // Not in miniapp, SDK methods will fail or timeout
+          console.log("Not in miniapp environment or SDK check timed out");
+          setIsInMiniApp(false);
+          hasAttemptedAutoConnect.current = true;
+          return;
+        }
+
+        setIsInMiniApp(isInMiniApp);
+        hasAttemptedAutoConnect.current = true;
+
+        // Only proceed with miniapp-specific logic if we're actually in a miniapp
+        if (isInMiniApp) {
+          // Only auto-connect if not already connected (initial mount only)
+          if (!isConnected) {
+            console.log("Auto-connecting to Farcaster on initial load");
+            const farcasterConnector = connectors.find(
+              (c) => c.id === "farcaster"
+            );
+            if (farcasterConnector) {
+              connect({ connector: farcasterConnector });
+            }
+          }
+
+          // Only fetch context when in miniapp, with timeout
+          try {
+            const contextPromise = Promise.resolve(sdk.context);
+            const timeoutPromise = new Promise<never>((_, reject) =>
+              setTimeout(() => reject(new Error("Timeout")), 2000)
+            );
+
+            const context = await Promise.race([
+              contextPromise,
+              timeoutPromise,
+            ]);
+            console.log("Context", context);
+            setContext(context);
+          } catch (err) {
+            console.error("Failed to get miniapp context:", err);
+          }
+        }
+      } catch (err) {
+        console.error("Auto-connect error:", err);
+        // Ensure we set isInMiniApp to false on error
+        setIsInMiniApp(false);
+        hasAttemptedAutoConnect.current = true;
+      }
+    };
+    autoConnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
 
   const handleAddMiniApp = useCallback(async () => {
     try {
-      const result = await sdk.actions.addFrame();
-      if (result) {
-        return result;
+      // Check if addMiniApp action is available
+      if (typeof sdk !== "undefined" && sdk.actions?.addMiniApp) {
+        const result = await sdk.actions.addMiniApp();
+        if (result) {
+          return result;
+        }
       }
+      console.error(
+        "[MiniAppProvider.handleAddMiniApp] >> addMiniApp action not available"
+      );
       return null;
-    } catch (error) {
-      console.error("[error] adding frame", error);
+    } catch (e) {
+      const error = e as Error;
+      console.error(
+        "[MiniAppProvider.handleAddMiniApp] >> adding frame error",
+        error
+      );
+      // if (error?.message?.includes("domain")) {
+      //   setAddMiniAppMessage(
+      //     "⚠️ This miniapp can only be added from its official domain"
+      //   );
+      // } else {
+      //   setAddMiniAppMessage(
+      //     "❌ Failed to add miniapp. Please try again."
+      //   );
+      // }
       return null;
     }
   }, []);
 
   useEffect(() => {
     // on load, set the frame as ready
-    if (isMiniAppReady && !context?.client?.added && addMiniAppOnLoad) {
+    if (isInMiniApp && !context?.client?.added && addMiniAppOnLoad) {
       handleAddMiniApp();
     }
-  }, [
-    isMiniAppReady,
-    context?.client?.added,
-    handleAddMiniApp,
-    addMiniAppOnLoad,
-  ]);
+  }, [isInMiniApp, context?.client?.added, handleAddMiniApp, addMiniAppOnLoad]);
 
   return (
     <MiniAppContext.Provider
       value={{
-        isMiniAppReady,
-        setMiniAppReady,
-        addMiniApp: handleAddMiniApp,
         context,
+        isInMiniApp,
       }}
     >
-      <FrameWalletProvider>{children}</FrameWalletProvider>
+      {children}
     </MiniAppContext.Provider>
   );
 }

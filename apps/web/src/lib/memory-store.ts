@@ -1,4 +1,4 @@
-import type { FrameNotificationDetails } from "@farcaster/frame-sdk";
+import type { FrameNotificationDetails } from "@farcaster/miniapp-sdk";
 
 // In-memory storage to replace Redis
 const notificationStore = new Map<string, FrameNotificationDetails>();

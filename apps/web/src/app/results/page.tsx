@@ -8,6 +8,7 @@ import { calculateAssessmentResult } from "@/lib/scoring";
 import { ScoreDisplay } from "@/components/assessment/ScoreDisplay";
 import { DomainBreakdown } from "@/components/assessment/DomainBreakdown";
 import { ClaimTokenButton } from "@/components/assessment/ClaimTokenButton";
+import { TokenBalance } from "@/components/wallet/TokenBalance";
 import { Button } from "@/components/ui/button";
 
 export default function ResultsPage() {
@@ -21,27 +22,33 @@ export default function ResultsPage() {
     const questionsJson = sessionStorage.getItem("assessmentQuestions");
     const answersJson = sessionStorage.getItem("assessmentAnswers");
     const assessmentId = sessionStorage.getItem("assessmentId");
-    const candidateAddress =
-      sessionStorage.getItem("candidateAddress") || address || "";
+    const storedAddress = sessionStorage.getItem("candidateAddress");
+    const candidateAddress = storedAddress || address || "";
 
-    if (!questionsJson || !answersJson || !assessmentId) {
+    if (!questionsJson || !answersJson || !assessmentId || !candidateAddress) {
       // Redirect to home if no assessment data
       router.push("/");
       return;
     }
 
+    // TypeScript now knows these are not null after the check above
+    const validAssessmentId: string = assessmentId;
+    const validCandidateAddress: string = candidateAddress;
+    const validQuestionsJson: string = questionsJson;
+    const validAnswersJson: string = answersJson;
+
     async function submitAssessment() {
       try {
-        const questions: Question[] = JSON.parse(questionsJson);
-        const answers: Answer[] = JSON.parse(answersJson);
+        const questions: Question[] = JSON.parse(validQuestionsJson);
+        const answers: Answer[] = JSON.parse(validAnswersJson);
 
         // Submit to API for scoring
         const response = await fetch("/api/assessment/submit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            assessmentId,
-            candidateAddress,
+            assessmentId: validAssessmentId,
+            candidateAddress: validCandidateAddress,
             questions,
             answers,
           }),
@@ -57,13 +64,13 @@ export default function ResultsPage() {
         console.error("Failed to submit assessment:", error);
         // Fallback to client-side calculation if API fails
         try {
-          const questions: Question[] = JSON.parse(questionsJson);
-          const answers: Answer[] = JSON.parse(answersJson);
+          const questions: Question[] = JSON.parse(validQuestionsJson);
+          const answers: Answer[] = JSON.parse(validAnswersJson);
           const assessmentResult = calculateAssessmentResult(
             questions,
             answers,
-            candidateAddress,
-            assessmentId
+            validCandidateAddress,
+            validAssessmentId
           );
           setResult(assessmentResult);
         } catch (fallbackError) {
@@ -118,6 +125,11 @@ export default function ResultsPage() {
   return (
     <main className="flex-1 min-h-screen bg-white dark:bg-gray-900">
       <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Token Balance */}
+        <div className="mb-6 flex justify-end">
+          <TokenBalance />
+        </div>
+
         {/* Score Display */}
         <ScoreDisplay result={result} />
 

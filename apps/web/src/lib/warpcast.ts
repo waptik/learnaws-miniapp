@@ -1,4 +1,5 @@
 import { env } from "@/lib/env";
+import { APP_FULL_NAME } from "./constants";
 
 /**
  * Get the farcaster manifest for the frame, generate yours from Warpcast Mobile
@@ -6,7 +7,7 @@ import { env } from "@/lib/env";
  * @returns The farcaster manifest for the frame
  */
 export async function getFarcasterManifest() {
-  const frameName = "learnaws-miniapp";
+  const frameName = APP_FULL_NAME;
   const appUrl = env.NEXT_PUBLIC_BASE_URL;
   const noindex =
     appUrl.includes("localhost") ||
@@ -22,6 +23,12 @@ export async function getFarcasterManifest() {
   // In development mode, allow placeholder values for testing
   const isDevelopment =
     env.NEXT_PUBLIC_APP_ENV === "development" || appUrl.includes("localhost");
+
+  console.log("[getFarcasterManifest] >> isDevelopment", isDevelopment);
+  console.log(
+    "[getFarcasterManifest] >> hasValidAccountAssociation",
+    hasValidAccountAssociation
+  );
 
   if (!hasValidAccountAssociation && !isDevelopment) {
     throw new Error(
@@ -41,9 +48,10 @@ export async function getFarcasterManifest() {
     : {
         // Development fallback - these are placeholder values for local testing
         header:
-          "eyJmaWQiOjEyMzQ1LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4ZGV2ZWxvcG1lbnRfa2V5In0",
-        payload: "eyJkb21haW4iOiJsb2NhbGhvc3QifQ",
-        signature: "0xdev_signature_placeholder_for_local_testing_only",
+          "eyJmaWQiOjI2MDgxMiwidHlwZSI6ImF1dGgiLCJrZXkiOiIweEE3ZTRmYjE1MWQ5N0IyRjliYUVmNWJGMzI1M2U0NDg0RGIwRTFDNGQifQ",
+        payload: "eyJkb21haW4iOiJjZWxvLndhcHRpay54eXoifQ",
+        signature:
+          "s/GvbH88TjkAykVtBgfzgdUzsH6xMsMY1SFSZ+sBPq0rZonW6fy/jUnaUr6AJd5H0shIlLTa84WQCdfQBZg5MRs=",
       };
 
   return {
@@ -59,7 +67,7 @@ export async function getFarcasterManifest() {
       splashBackgroundColor: "#FFFFFF",
       webhookUrl: `${appUrl}/api/webhook`,
       // Metadata https://github.com/farcasterxyz/miniapps/discussions/191
-      subtitle: "A miniapp to prepare yourself for aws certifications", // 30 characters, no emojis or special characters, short description under app name
+      subtitle: "Practice for AWS Certs", // 30 characters, no emojis or special characters, short description under app name
       description: "A miniapp to prepare yourself for aws certifications", // 170 characters, no emojis or special characters, promotional message displayed on Mini App Page
       primaryCategory: "social",
       tags: ["mini-app", "celo"], // up to 5 tags, filtering/search tags

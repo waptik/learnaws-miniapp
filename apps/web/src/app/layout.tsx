@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { Navbar } from "@/components/navbar";
 import Providers from "@/components/providers";
+import { APP_FULL_NAME, APP_NAME } from "@/lib/constants";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,10 +20,10 @@ const frame = {
   version: "1",
   imageUrl: `${appUrl}/opengraph-image.png`,
   button: {
-    title: "Launch learnaws-miniapp",
+    title: APP_FULL_NAME,
     action: {
       type: "launch_frame",
-      name: "learnaws-miniapp",
+      name: APP_NAME,
       url: appUrl,
       splashImageUrl: `${appUrl}/icon.png`,
       splashBackgroundColor: "#ffffff",
@@ -31,10 +32,10 @@ const frame = {
 };
 
 export const metadata: Metadata = {
-  title: "learnaws-miniapp",
+  title: APP_FULL_NAME,
   description: "A miniapp to prepare yourself for aws certifications",
   openGraph: {
-    title: "learnaws-miniapp",
+    title: APP_FULL_NAME,
     description: "A miniapp to prepare yourself for aws certifications",
     images: [`${appUrl}/opengraph-image.png`],
   },

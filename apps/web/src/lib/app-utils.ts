@@ -1,17 +1,22 @@
 /**
  * Format a number as currency
  */
-export function formatCurrency(amount: number, currency = 'USD'): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
+export function formatCurrency(amount: number, currency = "USD"): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
     currency,
   }).format(amount);
 }
 
 /**
  * Truncate an address for display
+ * Format wallet address to show first 6 and last 4 characters
  */
-export function truncateAddress(address: string, startLength = 6, endLength = 4): string {
+export function truncateAddress(
+  address: string,
+  startLength = 6,
+  endLength = 4
+): string {
   if (address.length <= startLength + endLength) {
     return address;
   }

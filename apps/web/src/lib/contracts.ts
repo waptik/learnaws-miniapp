@@ -3,7 +3,7 @@
  * Handles reading contract state and preparing claim data
  */
 
-import { createPublicClient, http } from "viem";
+import { createPublicClient, http, keccak256, toBytes, toHex } from "viem";
 import { celoSepolia } from "viem/chains";
 
 // Contract addresses (Celo Sepolia)
@@ -12,8 +12,8 @@ export const CONTRACT_ADDRESSES = {
   AssessmentRewards: "0xa246e627EAA83EE57434166669767613597D0691",
 } as const;
 
-// ABI for AssessmentRewards contract (minimal for read operations)
-const ASSESSMENT_REWARDS_ABI = [
+// ABI for AssessmentRewards contract
+export const ASSESSMENT_REWARDS_ABI = [
   {
     inputs: [{ name: "user", type: "address" }],
     name: "canClaim",
@@ -38,6 +38,27 @@ const ASSESSMENT_REWARDS_ABI = [
   {
     inputs: [],
     name: "PASSING_SCORE",
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { name: "score", type: "uint256" },
+      { name: "assessmentId", type: "bytes32" },
+    ],
+    name: "claimReward",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+] as const;
+
+// ABI for AWSRewardToken contract
+export const AWS_REWARD_TOKEN_ABI = [
+  {
+    inputs: [{ name: "account", type: "address" }],
+    name: "balanceOf",
     outputs: [{ name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
@@ -141,4 +162,20 @@ export function generateAssessmentIdHash(
   const data = `${assessmentId}-${candidateAddress}-${score}`;
   return Buffer.from(data).toString("base64");
 }
+
+/**
+ * Convert assessment ID hash to bytes32 format for contract calls
+ * Uses keccak256 to create a proper 32-byte hash
+ */
+export function stringToBytes32(hash: string): `0x${string}` {
+  // Use keccak256 to create a proper 32-byte hash
+  const hashBytes = keccak256(toBytes(hash));
+  return hashBytes;
+}
+
+/**
+ * Get contract addresses as typed addresses
+ */
+export const ASSESSMENT_REWARDS_ADDRESS = CONTRACT_ADDRESSES.AssessmentRewards as `0x${string}`;
+export const AWS_REWARD_TOKEN_ADDRESS = CONTRACT_ADDRESSES.AWSRewardToken as `0x${string}`;
 
