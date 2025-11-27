@@ -2,8 +2,10 @@
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { MiniAppProvider } from "@/contexts/miniapp-context";
+import { QuickAuthProvider } from "@/contexts/quick-auth-context";
 import FrameWalletProvider from "@/contexts/frame-wallet-context";
 import { ComposerKitProvider } from "@composer-kit/ui/core";
+import { AutoAuth } from "@/components/auto-auth";
 import { Toaster } from "@/components/ui/toaster";
 import dynamic from "next/dynamic";
 
@@ -19,10 +21,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         {/* WagmiProvider must wrap ComposerKitProvider for wallet connections to work */}
         <FrameWalletProvider>
           <MiniAppProvider addMiniAppOnLoad={true}>
-            <ComposerKitProvider>
-              {children}
-              <Toaster />
-            </ComposerKitProvider>
+            <QuickAuthProvider>
+              <AutoAuth />
+              <ComposerKitProvider>
+                {children}
+                <Toaster />
+              </ComposerKitProvider>
+            </QuickAuthProvider>
           </MiniAppProvider>
         </FrameWalletProvider>
       </ErudaProvider>

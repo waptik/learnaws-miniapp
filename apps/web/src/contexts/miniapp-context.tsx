@@ -95,6 +95,9 @@ export function MiniAppProvider({
           } catch (err) {
             console.error("Failed to get miniapp context:", err);
           }
+
+          // Note: Quick Auth sign-in should be handled by QuickAuthProvider
+          // It will automatically sign in when the component mounts and detects miniapp
         }
       } catch (err) {
         console.error("Auto-connect error:", err);

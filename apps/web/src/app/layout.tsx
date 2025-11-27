@@ -51,6 +51,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://auth.farcaster.xyz" />
+      </head>
       <body className={`${inter.variable} font-body`}>
         {/* Navbar is included on all pages */}
         <div className="relative flex min-h-screen flex-col">
