@@ -12,13 +12,57 @@ export async function getFarcasterManifest() {
   const noindex =
     appUrl.includes("localhost") ||
     appUrl.includes("ngrok") ||
-    appUrl.includes("https://dev.");
+    appUrl.includes("https://dev.") ||
+    appUrl.startsWith("https://dev-");
 
-  // Check if account association is properly configured
-  const hasValidAccountAssociation =
-    env.NEXT_PUBLIC_FARCASTER_HEADER !== "build-time-placeholder" &&
-    env.NEXT_PUBLIC_FARCASTER_PAYLOAD !== "build-time-placeholder" &&
-    env.NEXT_PUBLIC_FARCASTER_SIGNATURE !== "build-time-placeholder";
+  // Parse account association from JSON if provided, otherwise use individual variables
+  let accountAssociation: {
+    header: string;
+    payload: string;
+    signature: string;
+  } | null = null;
+
+  // Try to parse from JSON first (preferred method)
+  if (env.NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON) {
+    try {
+      const parsed = JSON.parse(env.NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON);
+      if (
+        parsed.header &&
+        parsed.payload &&
+        parsed.signature &&
+        parsed.header !== "build-time-placeholder" &&
+        parsed.payload !== "build-time-placeholder" &&
+        parsed.signature !== "build-time-placeholder"
+      ) {
+        accountAssociation = {
+          header: parsed.header,
+          payload: parsed.payload,
+          signature: parsed.signature,
+        };
+      }
+    } catch (e) {
+      console.error(
+        "[getFarcasterManifest] >> Failed to parse NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON:",
+        e
+      );
+    }
+  }
+
+  // Fall back to individual variables if JSON not provided or invalid
+  if (!accountAssociation) {
+    const hasValidAccountAssociation =
+      env.NEXT_PUBLIC_FARCASTER_HEADER !== "build-time-placeholder" &&
+      env.NEXT_PUBLIC_FARCASTER_PAYLOAD !== "build-time-placeholder" &&
+      env.NEXT_PUBLIC_FARCASTER_SIGNATURE !== "build-time-placeholder";
+
+    if (hasValidAccountAssociation) {
+      accountAssociation = {
+        header: env.NEXT_PUBLIC_FARCASTER_HEADER,
+        payload: env.NEXT_PUBLIC_FARCASTER_PAYLOAD,
+        signature: env.NEXT_PUBLIC_FARCASTER_SIGNATURE,
+      };
+    }
+  }
 
   // In development mode, allow placeholder values for testing
   const isDevelopment =
@@ -27,38 +71,40 @@ export async function getFarcasterManifest() {
   console.log("[getFarcasterManifest] >> isDevelopment", isDevelopment);
   console.log(
     "[getFarcasterManifest] >> hasValidAccountAssociation",
-    hasValidAccountAssociation
+    !!accountAssociation
   );
 
-  if (!hasValidAccountAssociation && !isDevelopment) {
+  if (!accountAssociation && !isDevelopment) {
     throw new Error(
       "Account association not configured. Please generate your account association at: https://farcaster.xyz/~/developers/mini-apps/manifest?domain=" +
         new URL(appUrl).hostname +
-        " and set the NEXT_PUBLIC_FARCASTER_HEADER, NEXT_PUBLIC_FARCASTER_PAYLOAD, and NEXT_PUBLIC_FARCASTER_SIGNATURE environment variables."
+        " and set either NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON (JSON format) or NEXT_PUBLIC_FARCASTER_HEADER, NEXT_PUBLIC_FARCASTER_PAYLOAD, and NEXT_PUBLIC_FARCASTER_SIGNATURE environment variables."
     );
   }
 
   // Use development fallback values if in development mode and no real values are set
-  const accountAssociation = hasValidAccountAssociation
-    ? {
-        header: env.NEXT_PUBLIC_FARCASTER_HEADER,
-        payload: env.NEXT_PUBLIC_FARCASTER_PAYLOAD,
-        signature: env.NEXT_PUBLIC_FARCASTER_SIGNATURE,
-      }
-    : {
-        // Development fallback - these are placeholder values for local testing
-        header:
-          "eyJmaWQiOjI2MDgxMiwidHlwZSI6ImF1dGgiLCJrZXkiOiIweEE3ZTRmYjE1MWQ5N0IyRjliYUVmNWJGMzI1M2U0NDg0RGIwRTFDNGQifQ",
-        payload: "eyJkb21haW4iOiJjZWxvLndhcHRpay54eXoifQ",
-        signature:
-          "s/GvbH88TjkAykVtBgfzgdUzsH6xMsMY1SFSZ+sBPq0rZonW6fy/jUnaUr6AJd5H0shIlLTa84WQCdfQBZg5MRs=",
-      };
+  if (!accountAssociation) {
+    accountAssociation = {
+      // Development fallback - these are placeholder values for local testing
+      header:
+        "eyJmaWQiOjI2MDgxMiwidHlwZSI6ImF1dGgiLCJrZXkiOiIweEE3ZTRmYjE1MWQ5N0IyRjliYUVmNWJGMzI1M2U0NDg0RGIwRTFDNGQifQ",
+      payload: "eyJkb21haW4iOiJjZWxvLndhcHRpay54eXoifQ",
+      signature:
+        "s/GvbH88TjkAykVtBgfzgdUzsH6xMsMY1SFSZ+sBPq0rZonW6fy/jUnaUr6AJd5H0shIlLTa84WQCdfQBZg5MRs=",
+    };
+  }
+
+  let name = frameName;
+
+  if (isDevelopment) {
+    name = `${frameName} (Dev)`;
+  }
 
   return {
     accountAssociation,
     miniapp: {
       version: "1",
-      name: frameName,
+      name,
       iconUrl: `${appUrl}/icon.png`,
       homeUrl: appUrl,
       imageUrl: `${appUrl}/opengraph-image.png`,

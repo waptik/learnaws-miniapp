@@ -31,6 +31,10 @@ export const env = createEnv({
       .min(1)
       .optional()
       .default("build-time-placeholder"),
+    NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON: z
+      .string()
+      .optional()
+      .default(""),
   },
   // For Next.js >= 13.4.4, you only need to destructure client variables:
   experimental__runtimeEnv: {
@@ -40,5 +44,7 @@ export const env = createEnv({
     NEXT_PUBLIC_FARCASTER_PAYLOAD: process.env.NEXT_PUBLIC_FARCASTER_PAYLOAD,
     NEXT_PUBLIC_FARCASTER_SIGNATURE:
       process.env.NEXT_PUBLIC_FARCASTER_SIGNATURE,
+    NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON:
+      process.env.NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON,
   },
 });
