@@ -58,6 +58,17 @@
 
   .dark {
     /* Celo Brand Colors - Dark Mode */
+    --celo-yellow: #FCFF52;
+    --celo-forest-green: #4E632A;
+    --celo-purple: #1A0329;
+    --celo-light-tan: #FBF6F1;
+    --celo-dark-tan: #E6E3D5;
+    --celo-brown: #635949;
+    --celo-black: #FFFFFF; /* White in dark mode */
+    --celo-white: #1A0329; /* Purple in dark mode */
+    --celo-inactive: #9B9B9B;
+    --celo-body-copy: #E6E3D5; /* Light tan for body copy in dark mode */
+    
     --background: 270 100% 8%; /* celo-purple */
     --foreground: 0 0% 100%; /* celo-white */
     --card: 270 100% 8%;
@@ -74,7 +85,7 @@
     --accent-foreground: 0 0% 0%;
     --destructive: 0 90% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 270 30% 30%;
+    --border: 0 0% 100%; /* White borders in dark mode */
     --input: 270 30% 30%;
     --ring: 60 100% 67%;
     --sidebar-background: 240 5.9% 10%;
