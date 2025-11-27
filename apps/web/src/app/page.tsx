@@ -1,105 +1,116 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import { Button } from "@/components/ui/button";
-import { truncateAddress } from "@/lib/app-utils";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
+import { useState } from "react";
 
 export default function Home() {
   const router = useRouter();
-
-  // Wallet connection hooks
-  const { address, isConnected, isConnecting } = useAccount();
-
-  // Extract user data from context
-  // Use connected wallet address if available, otherwise fall back to user custody/verification
-  const walletAddress = address || "0x1e4B...605B";
-  const displayName = "User";
-  const username = "@user";
+  const [isHowToPlayExpanded, setIsHowToPlayExpanded] = useState(true);
 
   return (
-    <main className="flex-1">
-      <section className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-        <div className="w-full max-w-md mx-auto p-8 text-center">
-          {/* Welcome Header */}
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Welcome
-          </h1>
+    <section className="min-h-screen p-[clamp(0.8rem,3vw,1.5rem)] pt-[clamp(1rem,4vw,2rem)] max-w-[1400px] mx-auto">
+      {/* Hero Section - Yellow Banner */}
+      <div className="text-center mb-6 p-6 border-[3px] border-black dark:border-white relative bg-[#FCFF52] shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_#FFFFFF]">
+        <h1 className="font-headline text-[clamp(2rem,8vw,3.5rem)] mb-2 text-black uppercase leading-none m-0 font-[250]">
+          Learn AWS, Earn Rewards
+        </h1>
 
-          {/* Status Message */}
-          <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
-            You are signed in!
-          </p>
+        <p className="font-body text-[clamp(0.75rem,2.5vw,0.9rem)] text-[#1A0329] uppercase tracking-[0.02em] font-bold leading-[1.3] m-0">
+          Master AWS Certifications, Compete for the Prize Pool
+        </p>
+      </div>
 
-          {/* User Wallet Address */}
-          <div className="mb-8">
-            <div className="bg-white/20 dark:bg-gray-800/40 backdrop-blur-sm px-4 py-3 rounded-lg border border-white/30 dark:border-gray-700/50">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
-                  Wallet Status
-                </span>
-                <div
-                  className={`flex items-center gap-1 text-xs ${
-                    isConnected
-                      ? "text-green-600 dark:text-green-400"
-                      : isConnecting
-                      ? "text-yellow-600 dark:text-yellow-400"
-                      : "text-gray-500 dark:text-gray-400"
-                  }`}
-                >
-                  <div
-                    className={`w-2 h-2 rounded-full ${
-                      isConnected
-                        ? "bg-green-500 dark:bg-green-400"
-                        : isConnecting
-                        ? "bg-yellow-500 dark:bg-yellow-400"
-                        : "bg-gray-400 dark:bg-gray-500"
-                    }`}
-                  ></div>
-                  {isConnected
-                    ? "Connected"
-                    : isConnecting
-                    ? "Connecting..."
-                    : "Disconnected"}
+      {/* How to Play - Expandable Section */}
+      <div className="mb-6">
+        <button
+          onClick={() => setIsHowToPlayExpanded(!isHowToPlayExpanded)}
+          className="w-full bg-white dark:bg-[var(--celo-purple)] border-[3px] border-black dark:border-white p-4 px-6 flex justify-between items-center cursor-pointer transition-all duration-200 shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#FFFFFF] hover:bg-[var(--celo-dark-tan)] dark:hover:bg-[var(--celo-forest-green)]"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">❓</span>
+            <h3 className="font-body text-[clamp(1rem,3vw,1.3rem)] m-0 uppercase text-black dark:text-white font-[750]">
+              How to Play
+            </h3>
+          </div>
+          <span
+            className={`text-2xl transition-transform duration-200 inline-block text-black dark:text-white ${
+              isHowToPlayExpanded ? "rotate-180" : "rotate-0"
+            }`}
+          >
+            ▼
+          </span>
+        </button>
+
+        {isHowToPlayExpanded && (
+          <div className="bg-white dark:bg-[var(--celo-purple)] border-[3px] border-black dark:border-white border-t-0 p-6 shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#FFFFFF]">
+            <div className="flex flex-col gap-5">
+              {/* Step 1 */}
+              <div className="flex gap-4 items-start">
+                <div className="bg-[#FCFF52] border-[3px] border-black dark:border-white w-10 h-10 flex items-center justify-center flex-shrink-0">
+                  <span className="font-body text-xl text-black font-[750]">
+                    1
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-body text-[clamp(0.9rem,2.5vw,1.1rem)] m-0 mb-1 uppercase text-black dark:text-white font-[750]">
+                    Take AWS Quizzes
+                  </h4>
+                  <p className="font-body text-sm m-0 text-[#635949] dark:text-[#E6E3D5] leading-[1.4] font-normal">
+                    Choose from our curated AWS certification quizzes below and
+                    test your cloud knowledge
+                  </p>
                 </div>
               </div>
-              <p className="text-sm text-gray-700 dark:text-gray-300 font-mono">
-                {truncateAddress(walletAddress)}
-              </p>
-            </div>
-          </div>
 
-          {/* User Profile Section */}
-          <div className="mb-8">
-            {/* Profile Avatar */}
-            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center overflow-hidden">
-              <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
-                <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+              {/* Step 2 */}
+              <div className="flex gap-4 items-start">
+                <div className="bg-[#FCFF52] border-[3px] border-black dark:border-white w-10 h-10 flex items-center justify-center flex-shrink-0">
+                  <span className="font-body text-xl text-black font-[750]">
+                    2
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-body text-[clamp(0.9rem,2.5vw,1.1rem)] m-0 mb-1 uppercase text-black dark:text-white font-[750]">
+                    Earn Tokens
+                  </h4>
+                  <p className="font-body text-sm m-0 text-[#635949] dark:text-[#E6E3D5] leading-[1.4] font-normal">
+                    Complete quizzes to earn reward tokens (1 token per passing
+                    assessment, max 3 per day)
+                  </p>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="flex gap-4 items-start">
+                <div className="bg-[#FCFF52] border-[3px] border-black dark:border-white w-10 h-10 flex items-center justify-center flex-shrink-0">
+                  <span className="font-body text-xl text-black font-[750]">
+                    3
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-body text-[clamp(0.9rem,2.5vw,1.1rem)] m-0 mb-1 uppercase text-black dark:text-white font-[750]">
+                    Claim Real Rewards
+                  </h4>
+                  <p className="font-body text-sm m-0 text-[#635949] dark:text-[#E6E3D5] leading-[1.4] font-normal">
+                    Top players share the prize pool and receive real rewards
+                  </p>
+                </div>
               </div>
             </div>
-
-            {/* Profile Info */}
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
-                {displayName}
-              </h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                {username.startsWith("@") ? username : `@${username}`}
-              </p>
-            </div>
           </div>
+        )}
+      </div>
 
-          {/* Start Assessment Button */}
-          <div className="mb-6">
-            <Button
-              onClick={() => router.push("/assessment")}
-              className="w-full bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-black font-bold py-4 px-6 text-lg"
-            >
-              Start Assessment
-            </Button>
-          </div>
-        </div>
-      </section>
-    </main>
+      {/* Start Assessment Button */}
+      <div>
+        <Button
+          onClick={() => router.push("/assessment")}
+          className="w-full font-body !bg-black dark:!bg-[var(--celo-purple)] !text-[var(--celo-yellow)] dark:!text-white !border-[3px] !border-black dark:!border-white !py-6 !px-12 !text-lg !font-[750] !uppercase !tracking-[0.02em] !shadow-[4px_4px_0px_#000000] dark:!shadow-[4px_4px_0px_#FFFFFF] !transition-all !duration-200 hover:!bg-[var(--celo-yellow)] hover:!text-black dark:hover:!bg-[var(--celo-forest-green)] dark:hover:!text-white !rounded-none"
+          variant="outline"
+        >
+          Start Assessment
+        </Button>
+      </div>
+    </section>
   );
 }
