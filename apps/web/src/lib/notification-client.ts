@@ -1,10 +1,19 @@
 import { getUserNotificationDetails } from "@/lib/memory-store";
-import {
+import type {
   FrameNotificationDetails,
-  type SendNotificationRequest,
-  sendNotificationResponseSchema,
-} from "@farcaster/miniapp-sdk";
+  SendNotificationRequest,
+  SendNotificationResponse,
+} from "./notification-types";
+import { z } from "zod";
 import { env } from "./env";
+
+// Define the response schema locally
+const sendNotificationResponseSchema = z.object({
+  result: z.object({
+    successfulTokens: z.array(z.string()),
+    failedTokens: z.array(z.string()),
+  }),
+}) as z.ZodType<SendNotificationResponse>;
 
 const appUrl = env.NEXT_PUBLIC_BASE_URL || "";
 
