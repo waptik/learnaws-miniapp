@@ -2,14 +2,17 @@
 
 import { useTheme } from "./theme-provider";
 import { Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <button
+    <Button
       onClick={toggleTheme}
-      className="celo-button celo-sharp"
+      variant="outline"
+      size="sm"
+      className="celo-button"
       aria-label={`Current theme: ${theme}. Click to switch to ${
         theme === "light" ? "dark" : "light"
       }`}
@@ -28,6 +31,6 @@ export function ThemeToggle() {
           </>
         )}
       </span>
-    </button>
+    </Button>
   );
 }
