@@ -11,3 +11,15 @@ export const APP_LINKEDIN = "https://linkedin.com/company/learnaws";
 export const APP_FACEBOOK = "https://facebook.com/learnaws";
 export const APP_INSTAGRAM = "https://instagram.com/learnaws";
 export const APP_YOUTUBE = "https://youtube.com/learnaws";
+
+// contract addresses: { chain: contractAddress }
+export const CONTRACT_ADDRESSES = {
+  celo: {
+    AWSRewardToken: "0x9F88a4Cf7daDbd54b1A8c06B60a579d64C01E2E9",
+    AssessmentRewards: "0xa246e627EAA83EE57434166669767613597D0691",
+  },
+  celoSepolia: {
+    AWSRewardToken: "0x9F88a4Cf7daDbd54b1A8c06B60a579d64C01E2E9",
+    AssessmentRewards: "0xa246e627EAA83EE57434166669767613597D0691",
+  },
+} as const;

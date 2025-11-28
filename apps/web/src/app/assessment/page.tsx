@@ -22,10 +22,13 @@ import {
   saveCurrentIndex,
 } from "@/hooks/use-assessment";
 import { useConfirmDialog } from "@/hooks/use-confirm-dialog";
+import { WalletConnectButton } from "@/components/connect-button";
 
 export default function AssessmentPage() {
   const router = useRouter();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
+  const [walletDisconnected, setWalletDisconnected] = useState(false);
+  const [initialAddress, setInitialAddress] = useState<string | undefined>(address);
   const [currentIndex, setCurrentIndexState] = useState(() =>
     getCurrentIndex()
   );
@@ -55,6 +58,40 @@ export default function AssessmentPage() {
 
   const updateAnswerMutation = useUpdateAnswer();
   const { confirm, ConfirmDialog } = useConfirmDialog();
+
+  // Store initial wallet address when component mounts and clear any previous disconnection flags
+  useEffect(() => {
+    // Clear previous disconnection flags when starting a new assessment
+    sessionStorage.removeItem("walletDisconnected");
+    sessionStorage.removeItem("disconnectedAddress");
+    
+    if (address && !initialAddress) {
+      setInitialAddress(address);
+    }
+  }, [address, initialAddress]);
+
+  // Monitor wallet disconnection during assessment
+  useEffect(() => {
+    if (initialAddress && !isConnected) {
+      setWalletDisconnected(true);
+      // Mark assessment as unscored in sessionStorage
+      sessionStorage.setItem("walletDisconnected", "true");
+      sessionStorage.setItem("disconnectedAddress", initialAddress);
+    } else if (isConnected && address && initialAddress && address !== initialAddress) {
+      // Wallet changed - mark as disconnected
+      setWalletDisconnected(true);
+      sessionStorage.setItem("walletDisconnected", "true");
+      sessionStorage.setItem("disconnectedAddress", initialAddress);
+    }
+  }, [isConnected, address, initialAddress]);
+
+  // Check wallet connection before allowing assessment
+  useEffect(() => {
+    if (!isConnected && !initialAddress) {
+      // User hasn't connected wallet - redirect to home
+      router.push("/");
+    }
+  }, [isConnected, initialAddress, router]);
 
   // Restore current index from storage when questions load (for refresh persistence)
   // Only restore if not coming from review (review navigation is handled separately)
@@ -277,6 +314,32 @@ export default function AssessmentPage() {
     router.push("/review");
   };
 
+  // Show wallet connection required message if not connected
+  if (!isConnected && !initialAddress) {
+    return (
+      <main className="flex-1 min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+        <div className="text-center max-w-md mx-auto px-4">
+          <h2 className="text-2xl font-bold text-black dark:text-white mb-4">
+            Wallet Connection Required
+          </h2>
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
+            Please connect your wallet to take the assessment. Assessments require a connected wallet to be eligible for rewards.
+          </p>
+          <div className="flex justify-center">
+            <WalletConnectButton />
+          </div>
+          <Button
+            onClick={() => router.push("/")}
+            variant="outline"
+            className="mt-4 border-2 border-black dark:border-white hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            Go Home
+          </Button>
+        </div>
+      </main>
+    );
+  }
+
   if (isLoading) {
     return (
       <main className="flex-1 min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
@@ -351,6 +414,23 @@ export default function AssessmentPage() {
   return (
     <main className="flex-1 min-h-screen bg-white dark:bg-gray-900">
       <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Wallet Disconnection Warning */}
+        {walletDisconnected && (
+          <div className="mb-6 p-4 bg-yellow-100 dark:bg-yellow-900 border-2 border-yellow-500 rounded-lg">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">⚠️</span>
+              <div className="flex-1">
+                <h3 className="font-bold text-black dark:text-white mb-1">
+                  Wallet Disconnected
+                </h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  Your wallet has been disconnected during the assessment. This assessment will be unscored and you will not be eligible for rewards. You can still complete it for practice.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">

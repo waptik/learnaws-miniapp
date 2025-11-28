@@ -115,6 +115,7 @@ export interface AssessmentResult {
   totalQuestions: number;
   correctAnswers: number;
   assessmentId: string;             // Unique assessment ID
+  unscored?: boolean;               // True if wallet disconnected during assessment (no rewards)
 }
 
 /**

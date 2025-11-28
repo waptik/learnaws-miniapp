@@ -2,10 +2,28 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAccount } from "wagmi";
+import { WalletConnectButton } from "@/components/connect-button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Home() {
   const router = useRouter();
+  const { isConnected } = useAccount();
+  const { toast } = useToast();
   const [isHowToPlayExpanded, setIsHowToPlayExpanded] = useState(true);
+
+  const handleStartAssessment = () => {
+    if (!isConnected) {
+      toast({
+        title: "Wallet Connection Required",
+        description:
+          "Please connect your wallet to take the assessment and earn rewards.",
+        variant: "destructive",
+      });
+      return;
+    }
+    router.push("/assessment");
+  };
 
   return (
     <section className="min-h-screen p-[clamp(0.8rem,3vw,1.5rem)] pt-[clamp(1rem,4vw,2rem)] max-w-[1400px] mx-auto">
@@ -102,13 +120,33 @@ export default function Home() {
       </div>
 
       {/* Start Assessment Button */}
-      <div>
+      <div className="space-y-4">
+        {!isConnected && (
+          <div className="p-4 bg-yellow-100 dark:bg-yellow-900 border-2 border-yellow-500 rounded-lg">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">🔗</span>
+              <div className="flex-1">
+                <h3 className="font-bold text-black dark:text-white mb-1">
+                  Connect Your Wallet
+                </h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                  You must connect your wallet to take assessments and earn
+                  rewards. Keep your wallet connected throughout the assessment.
+                </p>
+                <div className="flex justify-center">
+                  <WalletConnectButton />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <Button
-          onClick={() => router.push("/assessment")}
-          className="w-full font-body !bg-black dark:!bg-[var(--celo-purple)] !text-[var(--celo-yellow)] dark:!text-white !border-[3px] !border-black dark:!border-white !py-6 !px-12 !text-lg !font-[750] !uppercase !tracking-[0.02em] !shadow-[4px_4px_0px_#000000] dark:!shadow-[4px_4px_0px_#FFFFFF] !transition-all !duration-200 hover:!bg-[var(--celo-yellow)] hover:!text-black dark:hover:!bg-[var(--celo-forest-green)] dark:hover:!text-white !rounded-none"
+          onClick={handleStartAssessment}
+          disabled={!isConnected}
+          className="w-full font-body !bg-black dark:!bg-[var(--celo-purple)] !text-[var(--celo-yellow)] dark:!text-white !border-[3px] !border-black dark:!border-white !py-6 !px-12 !text-lg !font-[750] !uppercase !tracking-[0.02em] !shadow-[4px_4px_0px_#000000] dark:!shadow-[4px_4px_0px_#FFFFFF] !transition-all !duration-200 hover:!bg-[var(--celo-yellow)] hover:!text-black dark:hover:!bg-[var(--celo-forest-green)] dark:hover:!text-white !rounded-none disabled:!opacity-50 disabled:!cursor-not-allowed"
           variant="outline"
         >
-          Start Assessment
+          {isConnected ? "Start Assessment" : "Connect Wallet to Start"}
         </Button>
       </div>
     </section>

@@ -90,7 +90,9 @@ export function MiniAppProvider({
               contextPromise,
               timeoutPromise,
             ]);
-            console.log("Context", context);
+            const chains = await sdk.getChains();
+            console.log("[MiniAppProvider.useEffect] >> Chains", chains);
+            console.log("[MiniAppProvider.useEffect] >> Context", context);
             setContext(context);
           } catch (err) {
             console.error("Failed to get miniapp context:", err);

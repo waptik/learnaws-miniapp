@@ -7,7 +7,28 @@ import { ReactNode } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { celo, celoSepolia } from "wagmi/chains";
 import { injected } from "@wagmi/connectors";
-import { APP_FULL_NAME } from "@/lib/constants";
+import { env } from "@/lib/env";
+
+// Determine which chain to use
+// Priority: 1) NEXT_PUBLIC_CHAIN (explicit override), 2) NEXT_PUBLIC_VERCEL_ENV (production = celo, others = sepolia)
+const getSelectedChain = () => {
+  // Check for explicit chain override first
+  const chainEnv = env.NEXT_PUBLIC_CHAIN;
+  if (chainEnv) {
+    return chainEnv === "celo" ? celo : celoSepolia;
+  }
+
+  // Fallback to VERCEL_ENV if NEXT_PUBLIC_CHAIN is not set
+  const vercelEnv = env.NEXT_PUBLIC_VERCEL_ENV;
+  if (vercelEnv === "production") {
+    return celo; // Production uses mainnet
+  }
+
+  // Default to sepolia for development, preview, etc.
+  return celoSepolia;
+};
+
+export const selectedChain = getSelectedChain();
 
 // Create connectors array - include Farcaster for MiniApp users and standard wallets for regular users
 const connectors = [

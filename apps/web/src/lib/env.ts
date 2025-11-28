@@ -31,10 +31,16 @@ export const env = createEnv({
       .min(1)
       .optional()
       .default("build-time-placeholder"),
-    NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON: z
+    NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON: z.string().optional().default(""),
+    NEXT_PUBLIC_VERCEL_ENV: z
+      .enum(["development", "preview", "production"])
+      .optional()
+      .default("development"),
+    NEXT_PUBLIC_CHAIN: z.enum(["celo", "sepolia"]).optional(),
+    NEXT_PUBLIC_ALLOWED_DEMO_WALLET: z
       .string()
       .optional()
-      .default(""),
+      .default("0xc95df660001358c0bAf8D778c913eef9612f59F5"), // 0x wallet address
   },
   // For Next.js >= 13.4.4, you only need to destructure client variables:
   experimental__runtimeEnv: {
@@ -46,5 +52,9 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_FARCASTER_SIGNATURE,
     NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON:
       process.env.NEXT_PUBLIC_FARCASTER_ASSOCIATION_JSON,
+    NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV,
+    NEXT_PUBLIC_CHAIN: process.env.NEXT_PUBLIC_CHAIN,
+    NEXT_PUBLIC_ALLOWED_DEMO_WALLET:
+      process.env.NEXT_PUBLIC_ALLOWED_DEMO_WALLET,
   },
 });
