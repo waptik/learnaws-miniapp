@@ -58,8 +58,8 @@ const config: HardhatUserConfig = {
         network: "celo",
         chainId: 42220,
         urls: {
-          apiURL: "https://api.celoscan.io/api",
-          browserURL: "https://celoscan.io",
+          apiURL: "https://celo.blockscout.com/api",
+          browserURL: "https://celo.blockscout.com",
         },
       },
       {
