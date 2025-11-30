@@ -2,6 +2,8 @@
 
 This document lists all environment variables needed for the web application.
 
+> **📖 New to the project?** See the [Complete Setup Guide](../../docs/SETUP.md) for full installation and configuration instructions.
+
 ## Quick Setup
 
 Create a `.env.local` file in `apps/web/` directory with the following variables:

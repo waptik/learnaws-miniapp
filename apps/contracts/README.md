@@ -3,6 +3,8 @@
 This directory contains the smart contracts for learnaws-miniapp, built with
 Hardhat and optimized for the Celo blockchain.
 
+> **📖 New to the project?** See the [Complete Setup Guide](../../docs/SETUP.md) for full installation and configuration instructions.
+
 ## 🚀 Quick Start
 
 ```bash

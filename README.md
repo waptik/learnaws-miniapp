@@ -13,19 +13,29 @@ A modern Celo blockchain application built with Next.js, TypeScript, and Turbore
 
 > 📋 **Current Phase**: PRD/Planning - See [PRD.md](./docs/PRD.md) for product requirements and [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) for detailed architecture.
 
-## Getting Started
+## 🚀 Getting Started
 
-1. Install dependencies:
+> **📖 New to the project?** Start with the [Complete Setup Guide](./docs/SETUP.md) for detailed installation instructions, environment configuration, and deployment steps.
+
+### Quick Start
+
+1. **Install dependencies:**
    ```bash
    pnpm install
    ```
 
-2. Start the development server:
+2. **Set up environment variables:**
+   - Web app: Create `apps/web/.env.local` (see [Web App ENV Setup](./apps/web/ENV_SETUP.md))
+   - Contracts: Create `apps/contracts/.env` (see [Contracts README](./apps/contracts/README.md))
+
+3. **Start the development server:**
    ```bash
    pnpm dev
    ```
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+4. **Open [http://localhost:3000](http://localhost:3000)** in your browser.
+
+For complete setup instructions, troubleshooting, and deployment guides, see the [Complete Setup Guide](./docs/SETUP.md).
 
 ## Project Structure
 
@@ -66,14 +76,23 @@ This is a monorepo managed by Turborepo with the following structure:
 
 ## 📚 Documentation
 
-- [PRD](./docs/PRD.md) - Product Requirements Document (current phase)
+### Setup & Configuration
+- **[Complete Setup Guide](./docs/SETUP.md)** ⭐ - **Start here!** Complete installation, environment setup, and deployment guide
+- [Web App Environment Setup](./apps/web/ENV_SETUP.md) - Web application environment variables
+- [Contracts README](./apps/contracts/README.md) - Smart contract setup and deployment
+- [Farcaster Setup](./docs/FARCASTER_SETUP.md) - Farcaster MiniApp integration guide
+- [Quick Auth Setup](./docs/QUICK_AUTH_SETUP.md) - Quick Auth integration guide
+
+### Product & Architecture
+- [PRD](./docs/PRD.md) - Product Requirements Document
 - [Implementation Plan](./docs/IMPLEMENTATION_PLAN.md) - Detailed architecture and implementation guide
 - [Implementation Summary](./docs/IMPLEMENTATION_SUMMARY.md) - High-level overview
+
+### Technical Specifications
 - [Design System](./docs/DESIGN_SYSTEM.md) - Celo brand design system reference
 - [Design System Implementation](./docs/DESIGN_SYSTEM_IMPLEMENTATION.md) - Implementation status
 - [Results Display Specification](./docs/RESULTS_DISPLAY_SPEC.md) - Assessment results format
 - [Question Types](./docs/QUESTION_TYPES.md) - Multiple choice and multiple response question formats
-- [Farcaster Setup](./docs/FARCASTER_SETUP.md) - Farcaster MiniApp setup guide
 
 ## Learn More
 
