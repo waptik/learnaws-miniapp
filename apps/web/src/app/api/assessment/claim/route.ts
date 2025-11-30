@@ -7,11 +7,13 @@ import {
   generateAssessmentIdHash,
 } from "@/lib/contracts";
 import { SCORING_CONFIG } from "@/types/assessment";
+import { getCourseCode, isCourseActive } from "@/lib/courses";
 
 const claimSchema = z.object({
   assessmentId: z.string(),
   candidateAddress: z.string(),
   score: z.number().min(0).max(1000),
+  courseId: z.string(), // Required: "ccp", "aws-basics", etc.
 });
 
 export async function POST(request: NextRequest) {
@@ -30,7 +32,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { assessmentId, candidateAddress, score } = validationResult.data;
+    const { assessmentId, candidateAddress, score, courseId } = validationResult.data;
+
+    // Validate course exists and is active
+    if (!isCourseActive(courseId)) {
+      return NextResponse.json({
+        canClaim: false,
+        reason: "Course not found or not active",
+        courseId,
+      });
+    }
 
     // Validate score meets passing threshold
     if (score < SCORING_CONFIG.PASSING_SCORE) {
@@ -56,6 +67,9 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Determine course code for contract (certificationCode for cert courses, courseId for others)
+    const courseCode = getCourseCode(courseId);
+
     // Generate claim data for frontend
     const assessmentIdHash = generateAssessmentIdHash(
       assessmentId,
@@ -72,6 +86,8 @@ export async function POST(request: NextRequest) {
         assessmentIdHash,
         score,
         candidateAddress,
+        courseId,
+        courseCode, // Frontend will send this to contract
       },
     });
   } catch (error) {

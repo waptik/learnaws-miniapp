@@ -4,7 +4,11 @@ import { config as dotenvConfig } from "dotenv";
 
 dotenvConfig();
 
-const accounts = process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [];
+// Use different private keys for different networks
+const celoAccounts = process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [];
+const sepoliaAccounts = process.env.SEPOLIA_PRIVATE_KEY
+  ? [process.env.SEPOLIA_PRIVATE_KEY]
+  : [];
 
 // Support custom RPC URLs via environment variables for better reliability
 // Example: Use Infura, Alchemy, or QuickNode endpoints
@@ -36,14 +40,14 @@ const config: HardhatUserConfig = {
     // Celo Mainnet (Live)
     celo: {
       url: networkConfig.celo.url,
-      accounts,
+      accounts: celoAccounts,
       chainId: networkConfig.celo.chainId,
       timeout: 120000, // 120 seconds
     },
     // Celo Sepolia Testnet (Test)
     sepolia: {
       url: networkConfig.sepolia.url,
-      accounts,
+      accounts: sepoliaAccounts,
       chainId: networkConfig.sepolia.chainId,
       timeout: 120000, // 120 seconds
     },

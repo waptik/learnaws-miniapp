@@ -74,6 +74,7 @@ export const ASSESSMENT_REWARDS_ABI = [
     inputs: [
       { name: "score", type: "uint256" },
       { name: "assessmentId", type: "bytes32" },
+      { name: "courseCode", type: "string" },
     ],
     name: "claimReward",
     outputs: [],

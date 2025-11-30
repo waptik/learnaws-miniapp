@@ -103,3 +103,18 @@ export function isCourseActive(courseId: string): boolean {
   const course = getCourseById(courseId);
   return course?.isActive === true && course?.isComingSoon === false;
 }
+
+/**
+ * Get course code for contract interaction
+ * For certification courses: returns certificationCode (e.g., "CLF-C02")
+ * For non-certification courses: returns courseId (e.g., "aws-basics")
+ * This is the code that will be stored on-chain in the RewardClaimed event
+ */
+export function getCourseCode(courseId: string): string {
+  const course = getCourseById(courseId);
+  if (!course) {
+    return courseId; // Fallback to courseId if course not found
+  }
+  // For certification courses, use certificationCode; otherwise use courseId
+  return course.certificationCode || courseId;
+}

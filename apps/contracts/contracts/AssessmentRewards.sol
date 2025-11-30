@@ -33,7 +33,8 @@ contract AssessmentRewards is Ownable, ReentrancyGuard {
         uint256 score,
         bytes32 indexed assessmentId,
         uint256 tokensMinted,
-        uint256 day
+        uint256 day,
+        string courseCode
     );
 
     event DailyLimitReached(
@@ -55,9 +56,14 @@ contract AssessmentRewards is Ownable, ReentrancyGuard {
      * @dev Claim reward tokens for passing an assessment
      * @param score Assessment score (100-1000)
      * @param assessmentId Unique identifier for the assessment
+     * @param courseCode Course code (e.g., "CLF-C02" for certification courses, "aws-basics" for non-certification)
      * @notice Requires score >= 700 and user must not exceed daily limit
      */
-    function claimReward(uint256 score, bytes32 assessmentId) 
+    function claimReward(
+        uint256 score, 
+        bytes32 assessmentId,
+        string memory courseCode
+    ) 
         external 
         nonReentrant 
     {
@@ -77,7 +83,7 @@ contract AssessmentRewards is Ownable, ReentrancyGuard {
         // Mint tokens
         rewardToken.mintReward(user, TOKENS_PER_PASS);
         
-        emit RewardClaimed(user, score, assessmentId, TOKENS_PER_PASS, currentDay);
+        emit RewardClaimed(user, score, assessmentId, TOKENS_PER_PASS, currentDay, courseCode);
         
         // Emit event if user reached daily limit
         if (claim.count == MAX_DAILY_CLAIMS) {

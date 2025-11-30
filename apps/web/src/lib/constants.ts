@@ -15,11 +15,11 @@ export const APP_YOUTUBE = "https://youtube.com/learnaws";
 // contract addresses: { chain: contractAddress }
 export const CONTRACT_ADDRESSES = {
   celo: {
-    AWSRewardToken: "0x9F88a4Cf7daDbd54b1A8c06B60a579d64C01E2E9",
-    AssessmentRewards: "0xa246e627EAA83EE57434166669767613597D0691",
+    AWSRewardToken: "0xc4A1f437720FF4C1cdfB88AbE4b1d9619fEf8e8b",
+    AssessmentRewards: "0x4fC99200198F74dbB089e7cf189A291188A85743",
   },
   celoSepolia: {
-    AWSRewardToken: "0x9F88a4Cf7daDbd54b1A8c06B60a579d64C01E2E9",
-    AssessmentRewards: "0xa246e627EAA83EE57434166669767613597D0691",
+    AWSRewardToken: "0xC24B7437170e222d99D0652b58335653c446DBAd",
+    AssessmentRewards: "0x7f9E876a1A40DeCA8BFe67Ed1bD8ba50F68b01d3",
   },
 } as const;

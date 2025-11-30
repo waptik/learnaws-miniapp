@@ -15,7 +15,9 @@
     "contracts:deploy:sepolia": "turbo run deploy:sepolia --filter=hardhat",
     "contracts:deploy:celo": "turbo run deploy:celo --filter=hardhat",
     "contracts:verify": "turbo run verify --filter=hardhat",
-    "phase1:fetch": "bun scripts/fetch-questions.ts"
+    "phase1:fetch": "bun scripts/fetch-questions.ts",
+    "w:hat": "pnpm -F hardhat",
+    "w:web": "pnpm -F web"
   },
   "devDependencies": {
     "@types/node": "^20.8.0",

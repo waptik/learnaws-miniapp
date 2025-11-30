@@ -128,6 +128,7 @@ export function ClaimTokenButton({ result }: ClaimTokenButtonProps) {
           assessmentId: result.assessmentId,
           candidateAddress: address,
           score: result.scaledScore,
+          courseId: result.courseId || "", // Pass courseId to API
         }),
       });
 
@@ -157,12 +158,15 @@ export function ClaimTokenButton({ result }: ClaimTokenButtonProps) {
       );
       const assessmentIdBytes32 = stringToBytes32(assessmentIdHash);
 
-      // Call smart contract to claim tokens
+      // Get courseCode from API response (determined by backend based on course type)
+      const courseCode = validationData.claimData?.courseCode || "";
+
+      // Call smart contract to claim tokens with courseCode
       writeContract({
         address: ASSESSMENT_REWARDS_ADDRESS,
         abi: ASSESSMENT_REWARDS_ABI,
         functionName: "claimReward",
-        args: [BigInt(result.scaledScore), assessmentIdBytes32],
+        args: [BigInt(result.scaledScore), assessmentIdBytes32, courseCode],
       });
 
       toast({

@@ -14,7 +14,8 @@
     "deploy:token:sepolia": "HARDHAT_IGNITION_CONFIRM_DEPLOYMENT=false hardhat ignition deploy ignition/modules/AWSRewardToken.ts --network sepolia",
     "verify": "hardhat verify",
     "clean": "hardhat clean",
-    "typechain": "hardhat typechain"
+    "typechain": "hardhat typechain",
+    "check:pending": "ts-node scripts/check-pending-txs.ts"
   },
   "keywords": [
     "hardhat",

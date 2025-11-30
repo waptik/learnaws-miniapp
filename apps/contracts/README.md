@@ -30,6 +30,7 @@ pnpm deploy:celo
 - `pnpm deploy:celo` - Deploy to Celo mainnet (live)
 - `pnpm verify` - Verify contracts on Celoscan
 - `pnpm clean` - Clean artifacts and cache
+- `pnpm check:pending` - Check for pending transactions blocking deployment
 
 ## 🌐 Networks
 
@@ -74,6 +75,49 @@ pnpm deploy:celo
    set it to `true` in your `.env` file.
 
 ## 🐛 Troubleshooting
+
+### Pending Transactions Error (IGN403)
+
+If you see an error like:
+
+```
+IGN403: You have sent transactions from 0x... and they interfere with Hardhat Ignition. 
+Please wait until they get 5 confirmations before running Hardhat Ignition again.
+```
+
+**This means:** Hardhat Ignition detected pending transactions from your
+deployment account that haven't been confirmed yet. This is a safety feature to
+prevent nonce conflicts.
+
+**Solutions:**
+
+1. **Check Pending Transactions:**
+   ```bash
+   pnpm check:pending
+   ```
+   This will show you how many pending transactions exist and their status.
+
+2. **Wait for Confirmations:**
+   - Hardhat Ignition requires 5 confirmations before proceeding
+   - On Celo mainnet, blocks are produced every ~5 seconds
+   - Wait approximately 25-30 seconds and try again
+
+3. **Check on Block Explorer:**
+   - View your account on
+     [Celo Explorer](https://celoscan.io/address/YOUR_ADDRESS)
+   - Check if transactions are pending or confirmed
+
+4. **If Transactions Are Stuck:**
+   - If transactions are stuck (not confirming), you may need to wait longer
+   - In rare cases, you might need to send a replacement transaction with higher
+     gas
+   - **Do not** delete Ignition deployment files unless you're sure the
+     deployment failed
+
+5. **Retry Deployment:** Once transactions have 5+ confirmations, retry:
+   ```bash
+   pnpm deploy:celo
+   ```
 
 ### Connection Timeout Issues
 
