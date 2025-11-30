@@ -177,7 +177,7 @@ export default function CoursePage() {
         {course.features && course.features.length > 0 && (
           <div className="mb-8">
             <h2 className="font-headline text-2xl font-bold text-black dark:text-white mb-4 uppercase">
-              What You'll Get
+              What You&apos;ll Get
             </h2>
             <ul className="space-y-2">
               {course.features.map((feature, index) => (

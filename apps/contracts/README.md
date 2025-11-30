@@ -62,10 +62,10 @@ pnpm deploy:celo
    ```env
    # Private key for Celo mainnet deployments (without 0x prefix)
    PRIVATE_KEY=your_private_key_without_0x_prefix
-   
+
    # Private key for Celo Sepolia testnet deployments (optional, can use same as PRIVATE_KEY)
    SEPOLIA_PRIVATE_KEY=your_sepolia_private_key_without_0x_prefix
-   
+
    # Optional: Celoscan API key for contract verification
    CELOSCAN_API_KEY=your_celoscan_api_key
    ```

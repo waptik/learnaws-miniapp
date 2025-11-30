@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAccount } from "wagmi";
 
 interface FarcasterUser {
@@ -35,17 +35,6 @@ export function useFarcaster(): UseFarcasterReturn {
     checkFarcasterEnvironment();
   }, []);
 
-  useEffect(() => {
-    if (!mounted) return;
-
-    if (isConnected && address) {
-      loadUserData();
-    } else {
-      setIsLoading(false);
-      setUser(null);
-    }
-  }, [mounted, isConnected, address]);
-
   const checkFarcasterEnvironment = () => {
     // Check if we're in Farcaster frame/miniapp
     const isFrame =
@@ -59,7 +48,7 @@ export function useFarcaster(): UseFarcasterReturn {
     setIsInFarcaster(isFrame);
   };
 
-  const loadUserData = async () => {
+  const loadUserData = useCallback(async () => {
     if (!mounted) return;
 
     try {
@@ -151,7 +140,18 @@ export function useFarcaster(): UseFarcasterReturn {
         setIsLoading(false);
       }
     }
-  };
+  }, [mounted, isConnected, address]);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    if (isConnected && address) {
+      loadUserData();
+    } else {
+      setIsLoading(false);
+      setUser(null);
+    }
+  }, [mounted, isConnected, address, loadUserData]);
 
   const connectWallet = async () => {
     try {

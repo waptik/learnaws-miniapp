@@ -169,14 +169,14 @@ SEPOLIA_RPC_URL=https://forno.celo-sepolia.celo-testnet.org
 
 #### Contract Environment Variables Summary
 
-| Variable            | Description                                    | Required For        | Default                    |
-| ------------------- | ---------------------------------------------- | ------------------- | -------------------------- |
-| `PRIVATE_KEY`       | Private key for Celo mainnet deployments      | Mainnet deployment  | None                       |
-| `SEPOLIA_PRIVATE_KEY` | Private key for Celo Sepolia testnet deployments | Testnet deployment | None (can use PRIVATE_KEY) |
-| `CELOSCAN_API_KEY`  | API key for contract verification on Celoscan  | Contract verification | None                    |
-| `CELO_RPC_URL`      | Custom RPC URL for Celo mainnet                | Optional            | `https://forno.celo.org`   |
-| `SEPOLIA_RPC_URL`   | Custom RPC URL for Celo Sepolia testnet        | Optional            | `https://forno.celo-sepolia...` |
-| `REPORT_GAS`        | Enable gas reporting in tests                  | Optional            | undefined                  |
+| Variable              | Description                                      | Required For          | Default                         |
+| --------------------- | ------------------------------------------------ | --------------------- | ------------------------------- |
+| `PRIVATE_KEY`         | Private key for Celo mainnet deployments         | Mainnet deployment    | None                            |
+| `SEPOLIA_PRIVATE_KEY` | Private key for Celo Sepolia testnet deployments | Testnet deployment    | None (can use PRIVATE_KEY)      |
+| `CELOSCAN_API_KEY`    | API key for contract verification on Celoscan    | Contract verification | None                            |
+| `CELO_RPC_URL`        | Custom RPC URL for Celo mainnet                  | Optional              | `https://forno.celo.org`        |
+| `SEPOLIA_RPC_URL`     | Custom RPC URL for Celo Sepolia testnet          | Optional              | `https://forno.celo-sepolia...` |
+| `REPORT_GAS`          | Enable gas reporting in tests                    | Optional              | undefined                       |
 
 **⚠️ Security Note:** Never commit `.env` or `.env.local` files to version
 control. They are already in `.gitignore`.
@@ -250,18 +250,20 @@ pnpm contracts:test
    ```env
    SEPOLIA_PRIVATE_KEY=your_sepolia_private_key_without_0x_prefix
    ```
-   > **Note:** You can use the same private key as `PRIVATE_KEY` or use a different wallet for testnet.
+   > **Note:** You can use the same private key as `PRIVATE_KEY` or use a
+   > different wallet for testnet.
 
 2. **Get testnet tokens:**
    - Visit [Celo Sepolia Faucet](https://faucet.celo.org/celo-sepolia)
-   - Request testnet tokens for your deployment address (the address derived from `SEPOLIA_PRIVATE_KEY`)
+   - Request testnet tokens for your deployment address (the address derived
+     from `SEPOLIA_PRIVATE_KEY`)
 
 3. **Deploy to Sepolia:**
    ```bash
    pnpm contracts:deploy:sepolia
    ```
 
-3. **Verify deployment:**
+4. **Verify deployment:**
    - Check [Celo Sepolia Explorer](https://celo-sepolia.blockscout.com)
    - Update contract addresses in `apps/web/src/lib/constants.ts` if needed
 
@@ -286,11 +288,11 @@ pnpm contracts:test
    pnpm contracts:deploy:celo
    ```
 
-3. **Update contract addresses:**
+4. **Update contract addresses:**
    - Copy deployed addresses from the output
    - Update `apps/web/src/lib/constants.ts` with new addresses
 
-4. **Verify contracts (optional):**
+5. **Verify contracts (optional):**
    ```bash
    pnpm contracts:verify --network celo
    ```
