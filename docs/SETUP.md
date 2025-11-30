@@ -1,6 +1,8 @@
 # Complete Setup Guide
 
-This guide will walk you through setting up the LearnAWS Miniapp project from scratch, including all prerequisites, environment configuration, and deployment steps.
+This guide will walk you through setting up the LearnAWS Miniapp project from
+scratch, including all prerequisites, environment configuration, and deployment
+steps.
 
 ## 📋 Table of Contents
 
@@ -75,7 +77,8 @@ cd learnaws-miniapp
 pnpm install
 ```
 
-This will install all dependencies for both the web app and smart contracts using Turborepo.
+This will install all dependencies for both the web app and smart contracts
+using Turborepo.
 
 ### 3. Verify Installation
 
@@ -91,7 +94,8 @@ pnpm type-check
 
 ## Environment Configuration
 
-The project requires environment variables for both the web application and smart contracts.
+The project requires environment variables for both the web application and
+smart contracts.
 
 ### Web Application Environment
 
@@ -102,7 +106,8 @@ cd apps/web
 touch .env.local
 ```
 
-2. **Add required variables** (see [Web App Environment Setup](../apps/web/ENV_SETUP.md) for details):
+2. **Add required variables** (see
+   [Web App Environment Setup](../apps/web/ENV_SETUP.md) for details):
 
 ```env
 # Application
@@ -122,11 +127,13 @@ NEXT_PUBLIC_FARCASTER_SIGNATURE=build-time-placeholder
 ```
 
 **Generate JWT Secret:**
+
 ```bash
 openssl rand -base64 32
 ```
 
-**For detailed web app environment setup, see:** [Web App ENV Setup](../apps/web/ENV_SETUP.md)
+**For detailed web app environment setup, see:**
+[Web App ENV Setup](../apps/web/ENV_SETUP.md)
 
 ### Smart Contract Environment
 
@@ -140,20 +147,42 @@ touch .env
 2. **Add required variables**:
 
 ```env
-# Private key for deployment (without 0x prefix)
+# Private keys for deployment (without 0x prefix)
+# PRIVATE_KEY is used for Celo mainnet deployments
 PRIVATE_KEY=your_private_key_here
+
+# SEPOLIA_PRIVATE_KEY is used for Celo Sepolia testnet deployments
+# You can use the same key or a different one for testnet
+SEPOLIA_PRIVATE_KEY=your_sepolia_private_key_here
 
 # Optional: Celoscan API key for contract verification
 CELOSCAN_API_KEY=your_celoscan_api_key
 
 # Optional: Custom RPC URLs (for better reliability)
+# Use Infura, Alchemy, or QuickNode for better reliability
 CELO_RPC_URL=https://forno.celo.org
 SEPOLIA_RPC_URL=https://forno.celo-sepolia.celo-testnet.org
+
+# Optional: Enable gas reporting in tests
+# REPORT_GAS=true
 ```
 
-**⚠️ Security Note:** Never commit `.env` or `.env.local` files to version control. They are already in `.gitignore`.
+#### Contract Environment Variables Summary
 
-**For detailed contract environment setup, see:** [Contracts README](../apps/contracts/README.md)
+| Variable            | Description                                    | Required For        | Default                    |
+| ------------------- | ---------------------------------------------- | ------------------- | -------------------------- |
+| `PRIVATE_KEY`       | Private key for Celo mainnet deployments      | Mainnet deployment  | None                       |
+| `SEPOLIA_PRIVATE_KEY` | Private key for Celo Sepolia testnet deployments | Testnet deployment | None (can use PRIVATE_KEY) |
+| `CELOSCAN_API_KEY`  | API key for contract verification on Celoscan  | Contract verification | None                    |
+| `CELO_RPC_URL`      | Custom RPC URL for Celo mainnet                | Optional            | `https://forno.celo.org`   |
+| `SEPOLIA_RPC_URL`   | Custom RPC URL for Celo Sepolia testnet        | Optional            | `https://forno.celo-sepolia...` |
+| `REPORT_GAS`        | Enable gas reporting in tests                  | Optional            | undefined                  |
+
+**⚠️ Security Note:** Never commit `.env` or `.env.local` files to version
+control. They are already in `.gitignore`.
+
+**For detailed contract environment setup, see:**
+[Contracts README](../apps/contracts/README.md)
 
 ---
 
@@ -169,6 +198,7 @@ pnpm dev
 ```
 
 This will start:
+
 - Next.js web app on `http://localhost:3000`
 - Hot reload enabled for both frontend and contracts
 
@@ -216,11 +246,17 @@ pnpm contracts:test
 
 ### Deploy to Testnet (Recommended First)
 
-1. **Get testnet tokens:**
-   - Visit [Celo Sepolia Faucet](https://faucet.celo.org/celo-sepolia)
-   - Request testnet tokens for your deployment address
+1. **Ensure `SEPOLIA_PRIVATE_KEY` is set in `apps/contracts/.env`:**
+   ```env
+   SEPOLIA_PRIVATE_KEY=your_sepolia_private_key_without_0x_prefix
+   ```
+   > **Note:** You can use the same private key as `PRIVATE_KEY` or use a different wallet for testnet.
 
-2. **Deploy to Sepolia:**
+2. **Get testnet tokens:**
+   - Visit [Celo Sepolia Faucet](https://faucet.celo.org/celo-sepolia)
+   - Request testnet tokens for your deployment address (the address derived from `SEPOLIA_PRIVATE_KEY`)
+
+3. **Deploy to Sepolia:**
    ```bash
    pnpm contracts:deploy:sepolia
    ```
@@ -233,13 +269,19 @@ pnpm contracts:test
 
 ⚠️ **Warning:** Only deploy to mainnet after thorough testing on testnet!
 
-1. **Check for pending transactions:**
+1. **Ensure `PRIVATE_KEY` is set in `apps/contracts/.env`:**
+   ```env
+   PRIVATE_KEY=your_private_key_without_0x_prefix
+   ```
+   > **Note:** Make sure this wallet has sufficient CELO for gas fees.
+
+2. **Check for pending transactions:**
    ```bash
    cd apps/contracts
    pnpm check:pending
    ```
 
-2. **Deploy to Celo mainnet:**
+3. **Deploy to Celo mainnet:**
    ```bash
    pnpm contracts:deploy:celo
    ```
@@ -253,7 +295,8 @@ pnpm contracts:test
    pnpm contracts:verify --network celo
    ```
 
-**For detailed contract setup, see:** [Contracts README](../apps/contracts/README.md)
+**For detailed contract setup, see:**
+[Contracts README](../apps/contracts/README.md)
 
 ---
 
@@ -279,7 +322,8 @@ pnpm contracts:test
    ```
 
 5. **Generate Farcaster account association:**
-   - Visit: https://farcaster.xyz/~/developers/mini-apps/manifest?domain=abc123.ngrok-free.app
+   - Visit:
+     https://farcaster.xyz/~/developers/mini-apps/manifest?domain=abc123.ngrok-free.app
    - Sign in with your Farcaster account
    - Sign the manifest
    - Copy the `header`, `payload`, and `signature` values
@@ -301,12 +345,14 @@ pnpm contracts:test
 1. **Deploy your app** to your production domain
 
 2. **Generate account association** for your production domain:
-   - Visit: https://farcaster.xyz/~/developers/mini-apps/manifest?domain=yourdomain.com
+   - Visit:
+     https://farcaster.xyz/~/developers/mini-apps/manifest?domain=yourdomain.com
    - Sign the manifest with your Farcaster account
 
 3. **Set environment variables** in your deployment platform (Vercel, etc.)
 
-**For detailed Farcaster setup, see:** [Farcaster Setup Guide](./FARCASTER_SETUP.md)
+**For detailed Farcaster setup, see:**
+[Farcaster Setup Guide](./FARCASTER_SETUP.md)
 
 ---
 
@@ -331,6 +377,7 @@ pnpm contracts:test
 #### Other Platforms
 
 The app can be deployed to any platform that supports Next.js:
+
 - Netlify
 - Railway
 - AWS Amplify
@@ -376,15 +423,18 @@ pnpm check:pending
 
 Wait for transactions to get 5+ confirmations, then retry.
 
-**For more troubleshooting, see:** [Contracts README - Troubleshooting](../apps/contracts/README.md#-troubleshooting)
+**For more troubleshooting, see:**
+[Contracts README - Troubleshooting](../apps/contracts/README.md#-troubleshooting)
 
 #### 4. Farcaster manifest errors
 
 - Ensure `NEXT_PUBLIC_BASE_URL` matches your actual domain
 - Verify Farcaster account association values are correct
-- Check that the manifest endpoint is accessible: `https://yourdomain.com/.well-known/farcaster.json`
+- Check that the manifest endpoint is accessible:
+  `https://yourdomain.com/.well-known/farcaster.json`
 
-**For more Farcaster troubleshooting, see:** [Farcaster Setup Guide - Troubleshooting](./FARCASTER_SETUP.md#troubleshooting)
+**For more Farcaster troubleshooting, see:**
+[Farcaster Setup Guide - Troubleshooting](./FARCASTER_SETUP.md#troubleshooting)
 
 #### 5. TypeScript errors
 
@@ -470,4 +520,3 @@ If you encounter issues not covered in this guide:
 ---
 
 **Happy coding! 🚀**
-
