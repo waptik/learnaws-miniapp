@@ -66,8 +66,14 @@ export default function ReviewPage() {
     setReviewMode(true);
     setReviewQuestionIndex(questionIndex);
 
-    // Navigate to assessment page
-    router.push("/assessment");
+    // Get courseId from sessionStorage or default to old route
+    const courseId = sessionStorage.getItem("currentCourseId");
+    if (courseId) {
+      router.push(`/courses/${courseId}/assessment`);
+    } else {
+      // Fallback to old route for backwards compatibility
+      router.push("/assessment");
+    }
   };
 
   const handleSubmit = () => {
@@ -88,8 +94,14 @@ export default function ReviewPage() {
     setReviewMode(false);
     setReviewQuestionIndex(null);
 
-    // Navigate to results page
-    router.push("/results");
+    // Get courseId from sessionStorage or default to old route
+    const courseId = sessionStorage.getItem("currentCourseId");
+    if (courseId) {
+      router.push(`/courses/${courseId}/results`);
+    } else {
+      // Fallback to old route for backwards compatibility
+      router.push("/results");
+    }
   };
 
   if (isLoading) {

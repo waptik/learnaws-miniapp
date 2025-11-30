@@ -116,6 +116,11 @@ export interface AssessmentResult {
   correctAnswers: number;
   assessmentId: string;             // Unique assessment ID
   unscored?: boolean;               // True if wallet disconnected during assessment (no rewards)
+  
+  // Course/Certification Context (NEW)
+  courseId?: string;                // Course ID (e.g., "ccp")
+  certificationCode?: string | null; // Certification code (e.g., "CLF-C02")
+  rewardTokenSymbol?: string;        // Token symbol (e.g., "AWSP-CCP")
 }
 
 /**

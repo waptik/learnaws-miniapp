@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useAccount } from "wagmi";
-import { getActiveCourses } from "@/lib/courses";
 import { Question, Answer } from "@/types/assessment";
 import { getEffectiveQuestionType } from "@/lib/question-utils";
 import { QuestionCard } from "@/components/assessment/QuestionCard";
@@ -24,39 +23,15 @@ import {
 } from "@/hooks/use-assessment";
 import { useConfirmDialog } from "@/hooks/use-confirm-dialog";
 import { WalletConnectButton } from "@/components/connect-button";
+import { getCourseById, isCourseActive } from "@/lib/courses";
 
-export default function AssessmentPage() {
+export default function CourseAssessmentPage() {
+  const params = useParams();
   const router = useRouter();
   const { address, isConnected } = useAccount();
-  
-  // Redirect to course-based route (default to first active course, which is "ccp")
-  useEffect(() => {
-    const activeCourses = getActiveCourses();
-    if (activeCourses.length > 0) {
-      const defaultCourseId = activeCourses[0].id;
-      router.replace(`/courses/${defaultCourseId}/assessment`);
-    } else {
-      router.replace("/");
-    }
-  }, [router]);
+  const courseId = params.courseId as string;
+  const course = getCourseById(courseId);
 
-  // Show loading while redirecting
-  return (
-    <main className="flex-1 min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white mx-auto mb-4"></div>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
-          Redirecting...
-        </p>
-      </div>
-    </main>
-  );
-}
-
-// Keep old component code below for reference, but it won't be reached due to redirect
-function OldAssessmentPage() {
-  const router = useRouter();
-  const { address, isConnected } = useAccount();
   const [walletDisconnected, setWalletDisconnected] = useState(false);
   const [initialAddress, setInitialAddress] = useState<string | undefined>(address);
   const [currentIndex, setCurrentIndexState] = useState(() =>
@@ -66,6 +41,25 @@ function OldAssessmentPage() {
   // Check if coming from review
   const fromReview = isReviewMode();
   const reviewQuestionIndex = getReviewQuestionIndex();
+
+  // Store courseId in sessionStorage for results page
+  useEffect(() => {
+    if (courseId) {
+      sessionStorage.setItem("currentCourseId", courseId);
+    }
+  }, [courseId]);
+
+  // Validate course exists and is active
+  useEffect(() => {
+    if (!course) {
+      router.push("/");
+      return;
+    }
+    if (!isCourseActive(courseId)) {
+      router.push(`/courses/${courseId}`);
+      return;
+    }
+  }, [course, courseId, router]);
 
   // Wrapper to save index whenever it changes
   const setCurrentIndex = (index: number) => {
@@ -118,10 +112,10 @@ function OldAssessmentPage() {
   // Check wallet connection before allowing assessment
   useEffect(() => {
     if (!isConnected && !initialAddress) {
-      // User hasn't connected wallet - redirect to home
-      router.push("/");
+      // User hasn't connected wallet - redirect to course page
+      router.push(`/courses/${courseId}`);
     }
-  }, [isConnected, initialAddress, router]);
+  }, [isConnected, initialAddress, router, courseId]);
 
   // Restore current index from storage when questions load (for refresh persistence)
   // Only restore if not coming from review (review navigation is handled separately)
@@ -332,7 +326,8 @@ function OldAssessmentPage() {
     // Save assessment data
     saveAssessmentData(questions, answers, assessmentId, address || "");
 
-    // Navigate to review page
+    // Navigate to review page (still uses /review for now, can be migrated later)
+    // Review page will handle course-based navigation
     router.push("/review");
   };
 
@@ -341,8 +336,23 @@ function OldAssessmentPage() {
     saveAssessmentData(questions, answers, assessmentId, address || "");
     // Keep review mode enabled
     setReviewMode(true);
+    // Review page will handle course-based navigation
     router.push("/review");
   };
+
+  // Show loading or error if course not found
+  if (!course) {
+    return (
+      <main className="flex-1 min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white mx-auto mb-4"></div>
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            Loading course...
+          </p>
+        </div>
+      </main>
+    );
+  }
 
   // Show wallet connection required message if not connected
   if (!isConnected && !initialAddress) {
@@ -359,11 +369,11 @@ function OldAssessmentPage() {
             <WalletConnectButton />
           </div>
           <Button
-            onClick={() => router.push("/")}
+            onClick={() => router.push(`/courses/${courseId}`)}
             variant="outline"
             className="mt-4 border-2 border-black dark:border-white hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            Go Home
+            Back to Course
           </Button>
         </div>
       </main>
@@ -394,7 +404,7 @@ function OldAssessmentPage() {
               ? "Failed to load answers"
               : "No questions available"}
           </p>
-          <Button onClick={() => router.push("/")}>Go Home</Button>
+          <Button onClick={() => router.push(`/courses/${courseId}`)}>Back to Course</Button>
         </div>
       </main>
     );
@@ -464,9 +474,16 @@ function OldAssessmentPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
-            <h1 className="text-3xl font-bold text-black dark:text-white">
-              AWS Practice Assessment
-            </h1>
+            <div>
+              <h1 className="text-3xl font-bold text-black dark:text-white">
+                {course.name}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400">
+                {course.certificationCode 
+                  ? `${course.certificationCode} Practice Exam (Mock - Not Official)`
+                  : "Practice Exam (Mock - Not Official)"}
+              </p>
+            </div>
             {inReviewMode && (
               <Button
                 onClick={handleBackToReview}
@@ -477,9 +494,6 @@ function OldAssessmentPage() {
               </Button>
             )}
           </div>
-          <p className="text-gray-600 dark:text-gray-400">
-            CLF-C02 Practice Exam (Mock - Not Official)
-          </p>
         </div>
 
         {/* Progress Bar */}
@@ -532,3 +546,4 @@ function OldAssessmentPage() {
     </main>
   );
 }
+
