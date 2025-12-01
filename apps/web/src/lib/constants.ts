@@ -11,6 +11,9 @@ export const APP_LINKEDIN = "https://linkedin.com/company/learnaws";
 export const APP_FACEBOOK = "https://facebook.com/learnaws";
 export const APP_INSTAGRAM = "https://instagram.com/learnaws";
 export const APP_YOUTUBE = "https://youtube.com/learnaws";
+export const YOUTUBE_DEMO_URL = "https://www.youtube.com/watch?v=uNDX3iFxiZM";
+export const FARCASTER_MINIAPP_URL =
+  "https://farcaster.xyz/miniapps/md4TFUyA4VPc/learn-aws";
 
 // contract addresses: { chain: contractAddress }
 export const CONTRACT_ADDRESSES = {

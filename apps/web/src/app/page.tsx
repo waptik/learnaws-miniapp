@@ -7,11 +7,14 @@ import { WalletConnectButton } from "@/components/connect-button";
 import { useToast } from "@/hooks/use-toast";
 import { CourseGrid } from "@/components/courses/CourseGrid";
 import { getActiveCourses } from "@/lib/courses";
+import { useMiniApp } from "@/contexts/miniapp-context";
+import { FARCASTER_MINIAPP_URL, YOUTUBE_DEMO_URL } from "@/lib/constants";
 
 export default function Home() {
   const router = useRouter();
   const { isConnected } = useAccount();
   const { toast } = useToast();
+  const { isInMiniApp } = useMiniApp();
   const [isHowToPlayExpanded, setIsHowToPlayExpanded] = useState(true);
 
   const activeCourses = getActiveCourses();
@@ -109,6 +112,52 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {/* MiniApp Link - Show when not in miniapp */}
+      {!isInMiniApp && (
+        <div className="mb-6 p-4 bg-[#FCFF52] dark:bg-[var(--celo-purple)] border-[3px] border-black dark:border-white shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#FFFFFF]">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">📱</span>
+            <div className="flex-1">
+              <h3 className="font-headline text-lg font-bold text-black dark:text-white mb-2 uppercase">
+                Try it on Farcaster!
+              </h3>
+              <p className="text-sm text-[#1A0329] dark:text-[#E6E3D5] mb-3 font-normal">
+                Experience the full miniapp with seamless wallet integration on
+                Farcaster. Click below to open in Warpcast or your Farcaster
+                client.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <Button
+                  asChild
+                  className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 border-[3px] border-black dark:border-white shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#FFFFFF] uppercase font-bold"
+                >
+                  <a
+                    href={FARCASTER_MINIAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open in Farcaster →
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="bg-white dark:bg-[var(--celo-purple)] text-black dark:text-white hover:bg-[var(--celo-dark-tan)] dark:hover:bg-[var(--celo-forest-green)] border-[3px] border-black dark:border-white shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#FFFFFF] uppercase font-bold"
+                >
+                  <a
+                    href={YOUTUBE_DEMO_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    🎥 Watch Demo
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Wallet Connection Notice */}
       {!isConnected && (

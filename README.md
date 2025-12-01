@@ -21,6 +21,8 @@ Turborepo.
   [https://learnaws.vercel.app/](https://learnaws.vercel.app/)
 - **📱 Farcaster MiniApp**:
   [https://farcaster.xyz/miniapps/md4TFUyA4VPc/learn-aws](https://farcaster.xyz/miniapps/md4TFUyA4VPc/learn-aws)
+- **🎥 Demo Video**:
+  [Watch on YouTube](https://www.youtube.com/watch?v=uNDX3iFxiZM)
 
 > 📋 **Current Phase**: PRD/Planning - See [PRD.md](./docs/PRD.md) for product
 > requirements and [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) for
