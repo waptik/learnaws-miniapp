@@ -15,6 +15,13 @@ built on Celo blockchain with token rewards.
 A modern Celo blockchain application built with Next.js, TypeScript, and
 Turborepo.
 
+## 🔗 Links
+
+- **🌐 Live Website**:
+  [https://learnaws.vercel.app/](https://learnaws.vercel.app/)
+- **📱 Farcaster MiniApp**:
+  [https://farcaster.xyz/miniapps/md4TFUyA4VPc/learn-aws](https://farcaster.xyz/miniapps/md4TFUyA4VPc/learn-aws)
+
 > 📋 **Current Phase**: PRD/Planning - See [PRD.md](./docs/PRD.md) for product
 > requirements and [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) for
 > detailed architecture.
