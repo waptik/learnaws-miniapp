@@ -10,6 +10,10 @@ export const dynamic = "force-dynamic";
 const quickAuthClient = createClient();
 
 export const POST = async (req: NextRequest): Promise<NextResponse> => {
+  console.log("[API] POST /api/auth/sign-in", {
+    timestamp: new Date().toISOString(),
+  });
+
   const { token: farcasterToken } = await req.json();
   let fid;
   let isValidSignature;
@@ -35,6 +39,10 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   }
 
   if (!isValidSignature || !fid) {
+    console.log("[API] POST /api/auth/sign-in - Invalid token", {
+      isValidSignature,
+      fid,
+    });
     return NextResponse.json(
       { success: false, error: "Invalid token" },
       { status: 401 }
@@ -51,6 +59,11 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
     .setIssuedAt()
     .setExpirationTime(new Date(expirationTime))
     .sign(secret);
+
+  console.log("[API] POST /api/auth/sign-in - Success", {
+    fid,
+    walletAddress,
+  });
 
   return NextResponse.json(
     {

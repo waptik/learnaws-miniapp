@@ -4,11 +4,20 @@ import { Question } from "@/types/assessment";
 
 export async function POST(request: NextRequest) {
   try {
+    console.log("[API] POST /api/assessment/start", {
+      timestamp: new Date().toISOString(),
+    });
+
     // Generate unique assessment ID
     const assessmentId = generateAssessmentId();
 
     // Get domain-balanced question set (50 questions)
     const questions = await getRandomQuestionSet(50);
+
+    console.log("[API] POST /api/assessment/start - Success", {
+      assessmentId,
+      questionsCount: questions.length,
+    });
 
     return NextResponse.json({
       assessmentId,

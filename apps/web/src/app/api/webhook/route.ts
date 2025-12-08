@@ -60,6 +60,11 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { untrustedData, trustedData } = body;
 
+    console.log("[API] POST /api/webhook", {
+      timestamp: new Date().toISOString(),
+      buttonIndex: untrustedData?.buttonIndex,
+    });
+
     if (untrustedData?.buttonIndex === 1) {
       // Add frame notification
       const { fid } = decode(trustedData.messageBytes);
@@ -85,11 +90,13 @@ export async function POST(request: Request) {
         body: "You've successfully enabled notifications.",
       });
 
+      console.log("[API] POST /api/webhook - Notification enabled", { fid });
       return new Response("OK");
     } else if (untrustedData?.buttonIndex === 2) {
       // Remove frame notification
       const { fid } = decode(trustedData.messageBytes);
       await deleteUserNotificationDetails(fid);
+      console.log("[API] POST /api/webhook - Notification disabled", { fid });
       return new Response("OK");
     }
 

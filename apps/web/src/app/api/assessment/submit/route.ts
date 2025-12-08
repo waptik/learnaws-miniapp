@@ -14,6 +14,17 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
+    // Log API request
+    console.log("[API] POST /api/assessment/submit", {
+      timestamp: new Date().toISOString(),
+      body: {
+        assessmentId: body.assessmentId,
+        candidateAddress: body.candidateAddress,
+        questionsCount: body.questions?.length || 0,
+        answersCount: body.answers?.length || 0,
+      },
+    });
+    
     // Validate request body
     const validationResult = submitSchema.safeParse(body);
     if (!validationResult.success) {
@@ -40,6 +51,12 @@ export async function POST(request: NextRequest) {
       candidateAddress,
       assessmentId
     );
+
+    console.log("[API] POST /api/assessment/submit - Success", {
+      assessmentId: result.assessmentId,
+      scaledScore: result.scaledScore,
+      passFail: result.passFail,
+    });
 
     return NextResponse.json({
       result,
