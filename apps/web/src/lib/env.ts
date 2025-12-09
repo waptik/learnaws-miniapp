@@ -13,7 +13,7 @@ export const env = createEnv({
       .optional()
       .default("http://localhost:3000"),
     NEXT_PUBLIC_APP_ENV: z
-      .enum(["development", "production"])
+      .enum(["development", "production", "staging"])
       .optional()
       .default("development"),
     NEXT_PUBLIC_FARCASTER_HEADER: z
