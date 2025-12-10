@@ -20,6 +20,17 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    // Log API request
+    console.log("[API] POST /api/assessment/claim", {
+      timestamp: new Date().toISOString(),
+      body: {
+        assessmentId: body.assessmentId,
+        candidateAddress: body.candidateAddress,
+        score: body.score,
+        courseId: body.courseId,
+      },
+    });
+
     // Validate request body
     const validationResult = claimSchema.safeParse(body);
     if (!validationResult.success) {
@@ -32,10 +43,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { assessmentId, candidateAddress, score, courseId } = validationResult.data;
+    const { assessmentId, candidateAddress, score, courseId } =
+      validationResult.data;
 
     // Validate course exists and is active
     if (!isCourseActive(courseId)) {
+      console.log(
+        "[API] POST /api/assessment/claim - Course validation failed",
+        {
+          courseId,
+          isActive: isCourseActive(courseId),
+        }
+      );
       return NextResponse.json({
         canClaim: false,
         reason: "Course not found or not active",
@@ -76,6 +95,14 @@ export async function POST(request: NextRequest) {
       candidateAddress,
       score
     );
+
+    console.log("[API] POST /api/assessment/claim - Success", {
+      canClaim: true,
+      dailyCount: todayCount,
+      maxDailyClaims,
+      courseId,
+      courseCode,
+    });
 
     return NextResponse.json({
       canClaim: true,

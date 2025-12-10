@@ -5,36 +5,14 @@
 
 import { createPublicClient, http, keccak256, toBytes, toHex } from "viem";
 import { celo, celoSepolia } from "viem/chains";
-import { env } from "@/lib/env";
 import { CONTRACT_ADDRESSES as CONTRACT_ADDRESSES_BY_CHAIN } from "@/lib/constants";
-
-// Determine which chain to use
-// Priority: 1) NEXT_PUBLIC_CHAIN (explicit override), 2) NEXT_PUBLIC_VERCEL_ENV (production = celo, others = sepolia)
-const getSelectedChain = () => {
-  // Check for explicit chain override first
-  const chainEnv = env.NEXT_PUBLIC_CHAIN;
-  if (chainEnv === "celo") {
-    return celo;
-  }
-  if (chainEnv === "sepolia") {
-    return celoSepolia;
-  }
-  
-  // Fallback to VERCEL_ENV if NEXT_PUBLIC_CHAIN is not set
-  const vercelEnv = env.NEXT_PUBLIC_VERCEL_ENV;
-  if (vercelEnv === "production") {
-    return celo; // Production uses mainnet
-  }
-  
-  // Default to sepolia for development, preview, etc.
-  return celoSepolia;
-};
-
-export const selectedChain = getSelectedChain();
-
+import { selectedChain } from "@/lib/chain";
 // Get contract addresses for the selected chain
 const getContractAddresses = () => {
   const chainKey = selectedChain.id === celo.id ? "celo" : "celoSepolia";
+  console.log("chainKey", chainKey);
+  console.log("selectedChain", selectedChain);
+
   return CONTRACT_ADDRESSES_BY_CHAIN[chainKey];
 };
 
@@ -213,9 +191,15 @@ export const AWS_REWARD_TOKEN_ADDRESS =
 
 /**
  * Get block explorer URL for a transaction hash
+ * @param txHash - Transaction hash
+ * @param chainId - Optional chain ID. If not provided, uses selectedChain (for server-side)
  */
-export function getBlockExplorerUrl(txHash: string): string {
-  const isTestnet = selectedChain.id === celoSepolia.id;
+export function getBlockExplorerUrl(txHash: string, chainId?: number): string {
+  // Use provided chainId or fallback to selectedChain (for server-side usage)
+  const isTestnet = chainId
+    ? chainId === celoSepolia.id
+    : selectedChain.id === celoSepolia.id;
+
   if (isTestnet) {
     // Celo Sepolia testnet explorer
     return `https://sepolia.celoscan.io/tx/${txHash}`;

@@ -34,12 +34,13 @@ const frame = {
 };
 
 export const metadata: Metadata = {
-  title: APP_FULL_NAME,
+  title: `${APP_FULL_NAME} - AWS Certification Practice`,
   description: "A miniapp to prepare yourself for aws certifications",
   openGraph: {
-    title: APP_FULL_NAME,
+    title: `${APP_FULL_NAME} - AWS Certification Practice`,
     description: "A miniapp to prepare yourself for aws certifications",
     images: [`${appUrl}/opengraph-image.png`],
+    type: "website",
   },
   other: {
     "fc:frame": JSON.stringify(frame),

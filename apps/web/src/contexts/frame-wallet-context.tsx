@@ -1,13 +1,13 @@
 "use client";
 
 import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactNode } from "react";
-import { WagmiProvider, createConfig, http } from "wagmi";
+import { CreateConfigParameters, http } from "wagmi";
 import { celo, celoSepolia } from "wagmi/chains";
 import { injected } from "@wagmi/connectors";
 import { env } from "@/lib/env";
+import { ComposerKitProvider } from "@composer-kit/ui/core";
 
 // Determine which chain to use
 // Priority: 1) NEXT_PUBLIC_CHAIN (explicit override), 2) NEXT_PUBLIC_VERCEL_ENV (production = celo, others = sepolia)
@@ -51,16 +51,14 @@ const connectors = [
   injected(),
 ];
 
-const config = createConfig({
+const config: CreateConfigParameters = {
   chains: [celo, celoSepolia],
   connectors,
   transports: {
     [celo.id]: http(),
     [celoSepolia.id]: http(),
   },
-});
-
-const queryClient = new QueryClient();
+};
 
 export default function FrameWalletProvider({
   children,
@@ -68,11 +66,13 @@ export default function FrameWalletProvider({
   children: ReactNode;
 }) {
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        {children}
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </WagmiProvider>
+    <ComposerKitProvider
+      chain={selectedChain}
+      rpcUrl={selectedChain.rpcUrls.default.http[0]}
+      config={config}
+    >
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </ComposerKitProvider>
   );
 }

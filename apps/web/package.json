@@ -10,6 +10,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@celo/abis": "^14.0.1",
+    "@celo/identity": "^5.1.2",
     "@composer-kit/ui": "^0.0.3",
     "@farcaster/miniapp-core": "0.4.1",
     "@farcaster/miniapp-sdk": "0.2.1",

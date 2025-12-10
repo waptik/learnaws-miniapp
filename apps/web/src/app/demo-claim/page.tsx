@@ -14,6 +14,9 @@ import { ScoreDisplay } from "@/components/assessment/ScoreDisplay";
 import { DomainBreakdown } from "@/components/assessment/DomainBreakdown";
 import { useRouter } from "next/navigation";
 import { env } from "@/lib/env";
+import { isMiniPay } from "@/lib/wagmi";
+import { useChain } from "@/hooks/use-chain";
+import { Badge } from "@/components/ui/badge";
 
 /**
  * Demo page for testing token claim functionality
@@ -25,9 +28,21 @@ export default function DemoClaimPage() {
   const { address, isConnected } = useAccount();
   const [mockResult, setMockResult] = useState<AssessmentResult | null>(null);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+  const isInMiniPay = isMiniPay();
+  const { chain, chainId, isTestnet } = useChain();
 
   // Check if connected wallet is authorized
   useEffect(() => {
+    // Always allow access in development mode
+    const isDevelopment =
+      env.NEXT_PUBLIC_APP_ENV === "development" ||
+      env.NEXT_PUBLIC_VERCEL_ENV === "development";
+
+    if (isDevelopment) {
+      setIsAuthorized(true);
+      return;
+    }
+
     const allowedWallet = env.NEXT_PUBLIC_ALLOWED_DEMO_WALLET?.toLowerCase();
 
     if (!allowedWallet || allowedWallet === "") {
@@ -98,6 +113,7 @@ export default function DemoClaimPage() {
       assessmentId: `demo-${Date.now()}-${Math.random()
         .toString(36)
         .substr(2, 9)}`,
+      courseId: "ccp", // Use active course for demo
     };
   };
 
@@ -194,9 +210,29 @@ export default function DemoClaimPage() {
           </p>
         </div>
 
-        {/* Token Balance */}
-        <div className="mb-6 flex justify-end">
-          <TokenBalance />
+        {/* Network Info and Token Balance */}
+        <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Network:
+              </span>
+              <Badge variant={isTestnet ? "secondary" : "default"}>
+                {chain.name}
+              </Badge>
+              <span className="text-xs text-muted-foreground">
+                (Chain ID: {chainId})
+              </span>
+            </div>
+            {isInMiniPay && (
+              <div className="text-xs text-muted-foreground">
+                MiniPay: Gas fees paid in cUSD
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            <TokenBalance />
+          </div>
         </div>
 
         {/* Mock Result Controls */}

@@ -20,9 +20,11 @@ export const CONTRACT_ADDRESSES = {
   celo: {
     AWSRewardToken: "0xc4A1f437720FF4C1cdfB88AbE4b1d9619fEf8e8b",
     AssessmentRewards: "0x4fC99200198F74dbB089e7cf189A291188A85743",
+    cUSD: "0x765DE816845861e75A25fCA122bb6898B8B1282a",
   },
   celoSepolia: {
     AWSRewardToken: "0xC24B7437170e222d99D0652b58335653c446DBAd",
     AssessmentRewards: "0x7f9E876a1A40DeCA8BFe67Ed1bD8ba50F68b01d3",
+    cUSD: "0xEF4d55D6dE8e8d73232827Cd1e9b2F2dBb45bC80", // Verified cUSD address for Celo Sepolia
   },
 } as const;
